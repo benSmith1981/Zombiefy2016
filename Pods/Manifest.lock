@@ -1,0 +1,10 @@
+PODS:
+  - CameraEngine (0.4)
+
+DEPENDENCIES:
+  - CameraEngine
+
+SPEC CHECKSUMS:
+  CameraEngine: 8766440238e949fcfb6a062b15ac3326ef150e05
+
+COCOAPODS: 0.39.0

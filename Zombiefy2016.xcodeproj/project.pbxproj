@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A8965359F0075EEAB73418C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B537B7BF8586BD79CB10B5CF /* Pods.framework */; };
+		BE8EEDB81DD7A64300AA1811 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8EEDB71DD7A64300AA1811 /* ViewController.m */; };
+		BE8EEDBA1DD7A7B200AA1811 /* border.png in Resources */ = {isa = PBXBuildFile; fileRef = BE8EEDB91DD7A7B200AA1811 /* border.png */; };
 		BEB84F271DD79364001FF535 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB84F261DD79364001FF535 /* AppDelegate.swift */; };
-		BEB84F291DD79364001FF535 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB84F281DD79364001FF535 /* ViewController.swift */; };
 		BEB84F2C1DD79364001FF535 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEB84F2A1DD79364001FF535 /* Main.storyboard */; };
 		BEB84F2E1DD79364001FF535 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEB84F2D1DD79364001FF535 /* Assets.xcassets */; };
 		BEB84F311DD79364001FF535 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEB84F2F1DD79364001FF535 /* LaunchScreen.storyboard */; };
@@ -34,9 +36,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7DD63EFC23DE1B4EB2435A43 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		B537B7BF8586BD79CB10B5CF /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA9706D8685952C58900E0A8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		BE8EEDB51DD7A64200AA1811 /* Zombiefy2016-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zombiefy2016-Bridging-Header.h"; sourceTree = "<group>"; };
+		BE8EEDB61DD7A64300AA1811 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		BE8EEDB71DD7A64300AA1811 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		BE8EEDB91DD7A7B200AA1811 /* border.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = border.png; sourceTree = "<group>"; };
 		BEB84F231DD79364001FF535 /* Zombiefy2016.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zombiefy2016.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEB84F261DD79364001FF535 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BEB84F281DD79364001FF535 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		BEB84F2B1DD79364001FF535 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BEB84F2D1DD79364001FF535 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BEB84F301DD79364001FF535 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -54,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A8965359F0075EEAB73418C /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +83,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5237502D148EFB57D0BC311E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B537B7BF8586BD79CB10B5CF /* Pods.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		BEB84F1A1DD79364001FF535 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +98,8 @@
 				BEB84F3A1DD79365001FF535 /* Zombiefy2016Tests */,
 				BEB84F451DD79365001FF535 /* Zombiefy2016UITests */,
 				BEB84F241DD79364001FF535 /* Products */,
+				EB8B3CC280D4E86674F44D04 /* Pods */,
+				5237502D148EFB57D0BC311E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,11 +117,14 @@
 			isa = PBXGroup;
 			children = (
 				BEB84F261DD79364001FF535 /* AppDelegate.swift */,
-				BEB84F281DD79364001FF535 /* ViewController.swift */,
 				BEB84F2A1DD79364001FF535 /* Main.storyboard */,
 				BEB84F2D1DD79364001FF535 /* Assets.xcassets */,
+				BE8EEDB91DD7A7B200AA1811 /* border.png */,
 				BEB84F2F1DD79364001FF535 /* LaunchScreen.storyboard */,
 				BEB84F321DD79364001FF535 /* Info.plist */,
+				BE8EEDB61DD7A64300AA1811 /* ViewController.h */,
+				BE8EEDB71DD7A64300AA1811 /* ViewController.m */,
+				BE8EEDB51DD7A64200AA1811 /* Zombiefy2016-Bridging-Header.h */,
 			);
 			path = Zombiefy2016;
 			sourceTree = "<group>";
@@ -125,6 +147,15 @@
 			path = Zombiefy2016UITests;
 			sourceTree = "<group>";
 		};
+		EB8B3CC280D4E86674F44D04 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7DD63EFC23DE1B4EB2435A43 /* Pods.debug.xcconfig */,
+				BA9706D8685952C58900E0A8 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +163,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BEB84F4B1DD79365001FF535 /* Build configuration list for PBXNativeTarget "Zombiefy2016" */;
 			buildPhases = (
+				E6DEF51C6DD506D6E7357C08 /* Check Pods Manifest.lock */,
 				BEB84F1F1DD79364001FF535 /* Sources */,
 				BEB84F201DD79364001FF535 /* Frameworks */,
 				BEB84F211DD79364001FF535 /* Resources */,
+				DA66574BDFFFB1A00D9DDE3A /* Embed Pods Frameworks */,
+				40386C809686514B46EEFD9F /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -193,6 +227,8 @@
 				TargetAttributes = {
 					BEB84F221DD79364001FF535 = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = CWK29L7ZPT;
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
 					BEB84F361DD79365001FF535 = {
@@ -235,6 +271,7 @@
 				BEB84F311DD79364001FF535 /* LaunchScreen.storyboard in Resources */,
 				BEB84F2E1DD79364001FF535 /* Assets.xcassets in Resources */,
 				BEB84F2C1DD79364001FF535 /* Main.storyboard in Resources */,
+				BE8EEDBA1DD7A7B200AA1811 /* border.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,12 +291,60 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		40386C809686514B46EEFD9F /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA66574BDFFFB1A00D9DDE3A /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E6DEF51C6DD506D6E7357C08 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		BEB84F1F1DD79364001FF535 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEB84F291DD79364001FF535 /* ViewController.swift in Sources */,
+				BE8EEDB81DD7A64300AA1811 /* ViewController.m in Sources */,
 				BEB84F271DD79364001FF535 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -355,7 +440,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -399,7 +484,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -410,24 +495,33 @@
 		};
 		BEB84F4C1DD79365001FF535 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7DD63EFC23DE1B4EB2435A43 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = CWK29L7ZPT;
 				INFOPLIST_FILE = Zombiefy2016/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = test.Zombiefy2016;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bensmithinc.-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Zombiefy2016/Zombiefy2016-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		BEB84F4D1DD79365001FF535 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA9706D8685952C58900E0A8 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = CWK29L7ZPT;
 				INFOPLIST_FILE = Zombiefy2016/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = test.Zombiefy2016;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bensmithinc.-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Zombiefy2016/Zombiefy2016-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -505,6 +599,7 @@
 				BEB84F4D1DD79365001FF535 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BEB84F4E1DD79365001FF535 /* Build configuration list for PBXNativeTarget "Zombiefy2016Tests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +608,7 @@
 				BEB84F501DD79365001FF535 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BEB84F511DD79365001FF535 /* Build configuration list for PBXNativeTarget "Zombiefy2016UITests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +617,7 @@
 				BEB84F531DD79365001FF535 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
