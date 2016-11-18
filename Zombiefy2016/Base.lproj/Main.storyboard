@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -22,8 +21,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8mn-rE-co5">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8mn-rE-co5">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x0m-dn-ki9" customClass="CameraControls" customModule="Zombiefy2016" customModuleProvider="target">
@@ -53,20 +53,15 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="vTn-Wv-9kU"/>
+                                    <constraint firstAttribute="height" constant="54" id="UPj-Vk-rBK"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="x0m-dn-ki9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="55n-hW-sJO"/>
-                            <constraint firstItem="x0m-dn-ki9" firstAttribute="trailing" secondItem="8mn-rE-co5" secondAttribute="trailing" id="SUj-Ow-iHF"/>
-                            <constraint firstItem="8mn-rE-co5" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="U7Y-Oi-TJV"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x0m-dn-ki9" secondAttribute="bottom" id="bA3-my-UAw"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="x0m-dn-ki9" secondAttribute="trailing" constant="-16" id="f6Q-c4-U8K"/>
-                            <constraint firstItem="x0m-dn-ki9" firstAttribute="leading" secondItem="8mn-rE-co5" secondAttribute="leading" id="gGd-mw-NUX"/>
-                            <constraint firstAttribute="trailing" secondItem="x0m-dn-ki9" secondAttribute="trailing" id="weK-Q5-2mg"/>
-                            <constraint firstItem="8mn-rE-co5" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="z8C-hw-OsM"/>
+                            <constraint firstItem="x0m-dn-ki9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="J3C-DV-k3v"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x0m-dn-ki9" secondAttribute="bottom" id="MsP-zm-Aa0"/>
+                            <constraint firstAttribute="trailing" secondItem="x0m-dn-ki9" secondAttribute="trailing" id="bqS-CD-AzI"/>
                         </constraints>
                     </view>
                     <connections>

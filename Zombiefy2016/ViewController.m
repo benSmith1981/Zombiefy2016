@@ -40,7 +40,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 @synthesize previewLayer = _previewLayer;
 @synthesize cameraControls = _cameraControls;
 @synthesize device = _device;
-
+@synthesize desiredPosition = _desiredPosition;
 @synthesize faceDetector = _faceDetector;
 
 @synthesize isUsingFrontFacingCamera = _isUsingFrontFacingCamera;
@@ -56,12 +56,12 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	} else {
 	    [self.session setSessionPreset:AVCaptureSessionPresetPhoto];
 	}
-	
-    AVCaptureDevicePosition desiredPosition = AVCaptureDevicePositionFront;
+    
+    self.desiredPosition = AVCaptureDevicePositionFront;
 	
     // find the front facing camera
 	for (AVCaptureDevice *d in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo]) {
-		if ([d position] == desiredPosition) {
+		if ([d position] == self.desiredPosition) {
 			self.device = d;
             self.isUsingFrontFacingCamera = YES;
 			break;
@@ -395,26 +395,91 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 }
 
 - (void)switchCamera{
-    
     NSError *error = nil;
 
-    // Select a video device, make an input
-    AVCaptureDevice *device;
+    self.session = [[AVCaptureSession alloc] init];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
+        [self.session setSessionPreset:AVCaptureSessionPresetHigh];
+    } else {
+        [self.session setSessionPreset:AVCaptureSessionPresetPhoto];
+    }
     
-    AVCaptureDevicePosition desiredPosition = AVCaptureDevicePositionFront;
+    if (self.desiredPosition == AVCaptureDevicePositionFront) {
+        self.desiredPosition = AVCaptureDevicePositionBack;
+    } else {
+        self.desiredPosition = AVCaptureDevicePositionFront;
+    }
     
     // find the front facing camera
     for (AVCaptureDevice *d in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo]) {
-        if ([d position] == desiredPosition) {
-            device = d;
-            self.isUsingFrontFacingCamera = NO;
+        if ([d position] == self.desiredPosition) {
+            self.device = d;
+            self.isUsingFrontFacingCamera = YES;
             break;
         }
+    }
+    // fall back to the default camera.
+    if( nil == self.device )
+    {
+        self.isUsingFrontFacingCamera = NO;
+        self.device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     }
     
     // get the input device
     AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&error];
     
+    if( !error ) {
+        
+        // add the input to the session
+        if ( [self.session canAddInput:deviceInput] ){
+            [self.session addInput:deviceInput];
+        }
+        
+        
+        // Make a video data output
+        self.videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
+        
+        // we want BGRA, both CoreGraphics and OpenGL work well with 'BGRA'
+        NSDictionary *rgbOutputSettings = [NSDictionary dictionaryWithObject:
+                                           [NSNumber numberWithInt:kCMPixelFormat_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+        [self.videoDataOutput setVideoSettings:rgbOutputSettings];
+        [self.videoDataOutput setAlwaysDiscardsLateVideoFrames:YES]; // discard if the data output queue is blocked
+        
+        // create a serial dispatch queue used for the sample buffer delegate
+        // a serial dispatch queue must be used to guarantee that video frames will be delivered in order
+        // see the header doc for setSampleBufferDelegate:queue: for more information
+        self.videoDataOutputQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
+        [self.videoDataOutput setSampleBufferDelegate:self queue:self.videoDataOutputQueue];
+        
+        if ( [self.session canAddOutput:self.videoDataOutput] ){
+            [self.session addOutput:self.videoDataOutput];
+        }
+        
+        // get the output for doing face detection.
+        [[self.videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES];
+        
+        self.previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
+        self.previewLayer.backgroundColor = [[UIColor blackColor] CGColor];
+        self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+        
+        CALayer *rootLayer = [self.previewView layer];
+        [rootLayer setMasksToBounds:YES];
+        [self.previewLayer setFrame:[rootLayer bounds]];
+        [rootLayer addSublayer:self.previewLayer];
+        [self.session startRunning];
+        
+    }
+    self.session = nil;
+    if (error) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+                                  [NSString stringWithFormat:@"Failed with error %d", (int)[error code]]
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss" 
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        [self teardownAVCapture];
+    }
 }
 
 

@@ -14,5 +14,6 @@
 
 @property (nonatomic, weak) IBOutlet UIView *previewView;
 @property (nonatomic, weak) IBOutlet CameraControls *cameraControls;
+@property (nonatomic) AVCaptureDevicePosition *desiredPosition;
 
 @end
