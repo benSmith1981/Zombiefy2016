@@ -11,6 +11,7 @@
 #import <ImageIO/ImageIO.h>
 #import <AssertMacros.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "Zombiefy2016-Swift.h"
 
 static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
@@ -56,7 +57,6 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 {
 	NSError *error = nil;
     
-//    CameraControls *c = [CameraControls new];
     self.cameraControls.delegate = self;
 	self.session = [[AVCaptureSession alloc] init];
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){

@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "Zombiefy2016-Swift.h"
+
+@class CameraControls;
+
+//To make objective classes access swift classes you need to include tthis header file
 
 @protocol CameraControlsProtocol
 - (void)record;
