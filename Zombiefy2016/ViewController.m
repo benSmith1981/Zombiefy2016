@@ -14,7 +14,10 @@
 
 static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
-@interface ViewController ()
+@interface ViewController () <CameraControlsProtocol>
+
+@property (nonatomic, strong) AVCaptureSession *session;
+@property (nonatomic, strong) AVCaptureDevice *device;
 
 @property (nonatomic) BOOL isUsingFrontFacingCamera;
 @property (nonatomic, strong) AVCaptureVideoDataOutput *videoDataOutput;
@@ -38,10 +41,12 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 @synthesize videoDataOutput = _videoDataOutput;
 @synthesize videoDataOutputQueue = _videoDataOutputQueue;
-
+@synthesize session = _session;
 @synthesize borderImage = _borderImage;
 @synthesize previewView = _previewView;
 @synthesize previewLayer = _previewLayer;
+@synthesize cameraControls = _cameraControls;
+@synthesize device = _device;
 
 @synthesize faceDetector = _faceDetector;
 
@@ -50,42 +55,41 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 - (void)setupAVCapture
 {
 	NSError *error = nil;
-	
-	AVCaptureSession *session = [[AVCaptureSession alloc] init];
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
-	    [session setSessionPreset:AVCaptureSessionPresetHigh];
-	} else {
-	    [session setSessionPreset:AVCaptureSessionPresetPhoto];
-	}
     
-    // Select a video device, make an input
-	AVCaptureDevice *device;
+//    CameraControls *c = [CameraControls new];
+    self.cameraControls.delegate = self;
+	self.session = [[AVCaptureSession alloc] init];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
+	    [self.session setSessionPreset:AVCaptureSessionPresetHigh];
+	} else {
+	    [self.session setSessionPreset:AVCaptureSessionPresetPhoto];
+	}
 	
     AVCaptureDevicePosition desiredPosition = AVCaptureDevicePositionFront;
 	
     // find the front facing camera
 	for (AVCaptureDevice *d in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo]) {
 		if ([d position] == desiredPosition) {
-			device = d;
+			self.device = d;
             self.isUsingFrontFacingCamera = YES;
 			break;
 		}
 	}
     // fall back to the default camera.
-    if( nil == device )
+    if( nil == self.device )
     {
         self.isUsingFrontFacingCamera = NO;
-        device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        self.device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     }
     
     // get the input device
-    AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
+    AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&error];
     
 	if( !error ) {
         
         // add the input to the session
-        if ( [session canAddInput:deviceInput] ){
-            [session addInput:deviceInput];
+        if ( [self.session canAddInput:deviceInput] ){
+            [self.session addInput:deviceInput];
         }
         
         
@@ -104,14 +108,14 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
         self.videoDataOutputQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
         [self.videoDataOutput setSampleBufferDelegate:self queue:self.videoDataOutputQueue];
         
-        if ( [session canAddOutput:self.videoDataOutput] ){
-            [session addOutput:self.videoDataOutput];
+        if ( [self.session canAddOutput:self.videoDataOutput] ){
+            [self.session addOutput:self.videoDataOutput];
         }
         
         // get the output for doing face detection.
         [[self.videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES]; 
 
-        self.previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+        self.previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
         self.previewLayer.backgroundColor = [[UIColor blackColor] CGColor];
         self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspect;
         
@@ -119,10 +123,10 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
         [rootLayer setMasksToBounds:YES];
         [self.previewLayer setFrame:[rootLayer bounds]];
         [rootLayer addSublayer:self.previewLayer];
-        [session startRunning];
+        [self.session startRunning];
         
     }
-	session = nil;
+	self.session = nil;
 	if (error) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
                             [NSString stringWithFormat:@"Failed with error %d", (int)[error code]]
@@ -390,6 +394,35 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
             forVideoBox:cleanAperture 
             orientation:curDeviceOrientation];
 	});
+}
+
+#pragma mark - CameraControls Delegate
+
+- (void)record{
+    
+}
+
+- (void)switchCamera{
+    
+    NSError *error = nil;
+
+    // Select a video device, make an input
+    AVCaptureDevice *device;
+    
+    AVCaptureDevicePosition desiredPosition = AVCaptureDevicePositionFront;
+    
+    // find the front facing camera
+    for (AVCaptureDevice *d in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo]) {
+        if ([d position] == desiredPosition) {
+            device = d;
+            self.isUsingFrontFacingCamera = NO;
+            break;
+        }
+    }
+    
+    // get the input device
+    AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&error];
+    
 }
 
 

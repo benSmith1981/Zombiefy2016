@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5A8965359F0075EEAB73418C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B537B7BF8586BD79CB10B5CF /* Pods.framework */; };
+		909B4BB31DDCEED90093BE41 /* CameraControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909B4BB21DDCEED90093BE41 /* CameraControls.swift */; };
 		BE8EEDB81DD7A64300AA1811 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8EEDB71DD7A64300AA1811 /* ViewController.m */; };
 		BE8EEDBA1DD7A7B200AA1811 /* border.png in Resources */ = {isa = PBXBuildFile; fileRef = BE8EEDB91DD7A7B200AA1811 /* border.png */; };
 		BEB84F271DD79364001FF535 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB84F261DD79364001FF535 /* AppDelegate.swift */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		7DD63EFC23DE1B4EB2435A43 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		909B4BB21DDCEED90093BE41 /* CameraControls.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControls.swift; sourceTree = "<group>"; };
 		B537B7BF8586BD79CB10B5CF /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA9706D8685952C58900E0A8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		BE8EEDB51DD7A64200AA1811 /* Zombiefy2016-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zombiefy2016-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			children = (
 				BEB84F261DD79364001FF535 /* AppDelegate.swift */,
 				BEB84F2A1DD79364001FF535 /* Main.storyboard */,
+				909B4BB21DDCEED90093BE41 /* CameraControls.swift */,
 				BEB84F2D1DD79364001FF535 /* Assets.xcassets */,
 				BE8EEDB91DD7A7B200AA1811 /* border.png */,
 				BEB84F2F1DD79364001FF535 /* LaunchScreen.storyboard */,
@@ -345,6 +348,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE8EEDB81DD7A64300AA1811 /* ViewController.m in Sources */,
+				909B4BB31DDCEED90093BE41 /* CameraControls.swift in Sources */,
 				BEB84F271DD79364001FF535 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

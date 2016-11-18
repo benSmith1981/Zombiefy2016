@@ -8,10 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "Zombiefy2016-Swift.h"
 
-@interface ViewController : UIViewController 
+@protocol CameraControlsProtocol
+- (void)record;
+- (void)switchCamera;
+@end
+
+@interface ViewController : UIViewController
     <UIGestureRecognizerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *previewView;
+@property (nonatomic, weak) IBOutlet CameraControls *cameraControls;
 
 @end

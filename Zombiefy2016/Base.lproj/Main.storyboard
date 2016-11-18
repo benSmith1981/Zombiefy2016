@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,15 +22,55 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8mn-rE-co5">
-                                <frame key="frameInset" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8mn-rE-co5">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x0m-dn-ki9" customClass="CameraControls" customModule="Zombiefy2016" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="613" width="375" height="54"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wG3-UC-Wd1">
+                                        <rect key="frame" x="163" y="12" width="49" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Record"/>
+                                        <connections>
+                                            <action selector="record:" destination="x0m-dn-ki9" eventType="touchUpInside" id="8oi-2L-wEv"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9XR-jO-GO7">
+                                        <rect key="frame" x="321" y="12" width="46" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Button"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ekM-Ya-aO1">
+                                        <rect key="frame" x="4" y="12" width="55" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Reverse"/>
+                                        <connections>
+                                            <action selector="switchCamera:" destination="x0m-dn-ki9" eventType="touchUpInside" id="Y70-uG-89I"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="54" id="vTn-Wv-9kU"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="x0m-dn-ki9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="55n-hW-sJO"/>
+                            <constraint firstItem="x0m-dn-ki9" firstAttribute="trailing" secondItem="8mn-rE-co5" secondAttribute="trailing" id="SUj-Ow-iHF"/>
+                            <constraint firstItem="8mn-rE-co5" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="U7Y-Oi-TJV"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x0m-dn-ki9" secondAttribute="bottom" id="bA3-my-UAw"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="x0m-dn-ki9" secondAttribute="trailing" constant="-16" id="f6Q-c4-U8K"/>
+                            <constraint firstItem="x0m-dn-ki9" firstAttribute="leading" secondItem="8mn-rE-co5" secondAttribute="leading" id="gGd-mw-NUX"/>
+                            <constraint firstAttribute="trailing" secondItem="x0m-dn-ki9" secondAttribute="trailing" id="weK-Q5-2mg"/>
+                            <constraint firstItem="8mn-rE-co5" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="z8C-hw-OsM"/>
+                        </constraints>
                     </view>
                     <connections>
+                        <outlet property="cameraControls" destination="x0m-dn-ki9" id="SGm-EG-RI2"/>
                         <outlet property="previewView" destination="8mn-rE-co5" id="pmg-Oi-1Bd"/>
                     </connections>
                 </viewController>
