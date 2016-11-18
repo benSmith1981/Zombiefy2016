@@ -1,16 +1,10 @@
-//
-//  ViewController.m
-//  FaceDetectionPOC
-//
-//  Created by Jeroen Trappers on 30/04/12.
-//  Copyright (c) 2012 iCapps. All rights reserved.
-//
-
 #import "ViewController.h"
 #import <CoreImage/CoreImage.h>
 #import <ImageIO/ImageIO.h>
 #import <AssertMacros.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+
+//To make objective classes access swift classes you need to import the project swift header
 #import "Zombiefy2016-Swift.h"
 
 static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
@@ -34,8 +28,6 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 - (void)drawFaces:(NSArray *)features 
       forVideoBox:(CGRect)videoBox 
       orientation:(UIDeviceOrientation)orientation;
-
-
 @end
 
 @implementation ViewController

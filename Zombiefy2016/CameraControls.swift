@@ -11,7 +11,6 @@ import UIKit
 @objc class CameraControls: UIView {
 
     @objc public var delegate: CameraControlsProtocol?
-    @objc public var number: Int = 1
 
     @IBAction func record(_ sender: AnyObject) {
         delegate?.record()

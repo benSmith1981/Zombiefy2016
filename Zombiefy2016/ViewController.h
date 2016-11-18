@@ -1,17 +1,8 @@
-//
-//  ViewController.h
-//  FaceDetectionPOC
-//
-//  Created by Jeroen Trappers on 30/04/12.
-//  Copyright (c) 2012 iCapps. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
+//To make objective classes access swift classes you need to include forward declaration here
 @class CameraControls;
-
-//To make objective classes access swift classes you need to include tthis header file
 
 @protocol CameraControlsProtocol
 - (void)record;
