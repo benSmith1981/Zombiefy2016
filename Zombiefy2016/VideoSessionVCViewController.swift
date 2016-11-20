@@ -114,9 +114,10 @@ class VideoSessionVCViewController: UIViewController,
 //        let pixelBuffer : CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
 //        let attachments : CFDictionary = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, pixelBuffer, CMAttachmentMode( kCMAttachmentMode_ShouldPropagate))!
 //        let ciImage : CIImage = CIImage(cvPixelBuffer: pixelBuffer, options: attachments as? [String : AnyObject])
-//        self.videoFilter.previewView = previewView
-//        self.videoFilter.previewLayer = previewLayer
-        videoFilter.overrideCapture(captureOutput, didOutputSampleBuffer: sampleBuffer, from: connection, previewLayer: self.previewLayer, previewView: self.previewView)
+        
+        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        let cameraImage = CIImage(cvPixelBuffer: pixelBuffer!)
+        videoFilter.processCIImage(cameraImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.previewLayer, previewView: self.previewView)
     }
     
     func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) {

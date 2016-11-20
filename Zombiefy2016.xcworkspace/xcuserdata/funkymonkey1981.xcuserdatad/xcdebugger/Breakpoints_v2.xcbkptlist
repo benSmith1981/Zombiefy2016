@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Zombiefy2016/ViewController.m"
-            timestampString = "501348028.309929"
+            timestampString = "501348944.38474"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "382"
-            endingLineNumber = "382"
+            startingLineNumber = "374"
+            endingLineNumber = "374"
             landmarkName = "-record"
             landmarkType = "7">
          </BreakpointContent>

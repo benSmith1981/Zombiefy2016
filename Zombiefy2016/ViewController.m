@@ -216,7 +216,8 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		PHOTOS_EXIF_0ROW_RIGHT_0COL_BOTTOM      = 7, //   7  =  0th row is on the right, and 0th column is the bottom.  
 		PHOTOS_EXIF_0ROW_LEFT_0COL_BOTTOM       = 8  //   8  =  0th row is on the left, and 0th column is the bottom.  
 	};
-	
+    _isUsingFrontFacingCamera = true;
+    
 	switch (orientation) {
 		case UIDeviceOrientationPortraitUpsideDown:  // Device oriented vertically, home button on the top
 			exifOrientation = PHOTOS_EXIF_0ROW_LEFT_0COL_BOTTOM;
@@ -241,22 +242,13 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     return [NSNumber numberWithInt:exifOrientation];
 }
 
-- (void)overrideCapture:(AVCaptureOutput *)captureOutput
-    didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer 
-       fromConnection:(AVCaptureConnection *)connection
+- (void)processCIImage:(CIImage *)ciImage
+    didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
            previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
             previewView:(UIView *) previewView
 {
     self.previewLayer = previewLayer;
     self.previewView = previewView;
-	// get the image
-	CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-	CFDictionaryRef attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
-	CIImage *ciImage = [[CIImage alloc] initWithCVPixelBuffer:pixelBuffer 
-                                                      options:(__bridge NSDictionary *)attachments];
-	if (attachments) {
-		CFRelease(attachments);
-    }
     
     // make sure your device orientation is not locked.
 	UIDeviceOrientation curDeviceOrientation = [[UIDevice currentDevice] orientation];

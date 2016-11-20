@@ -19,11 +19,10 @@
     AVAssetWriterInputPixelBufferAdaptor *pixelBufferAdaptor;
 }
 
-- (void)overrideCapture:(AVCaptureOutput *)captureOutput
-  didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
-         fromConnection:(AVCaptureConnection *)connection
-           previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
-            previewView:(UIView *) previewView;
+- (void)processCIImage:(CIImage *)ciImage
+ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
+          previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
+           previewView:(UIView *) previewView;
 
 @property (nonatomic, strong) UIView *previewView;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
