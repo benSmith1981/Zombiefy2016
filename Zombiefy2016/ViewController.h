@@ -10,7 +10,7 @@
 @end
 
 @interface ViewController : UIViewController
-    <UIGestureRecognizerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate>
+    <UIGestureRecognizerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureFileOutputRecordingDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *previewView;
 @property (nonatomic, weak) IBOutlet CameraControls *cameraControls;

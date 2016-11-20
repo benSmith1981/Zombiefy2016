@@ -10,7 +10,7 @@ import UIKit
 
 @objc class CameraControls: UIView {
 
-    @objc public var delegate: CameraControlsProtocol?
+    public var delegate: CameraControlsProtocolSwift?
 
     @IBAction func record(_ sender: AnyObject) {
         delegate?.record()
