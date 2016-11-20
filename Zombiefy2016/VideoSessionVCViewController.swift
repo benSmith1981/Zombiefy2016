@@ -61,8 +61,11 @@ class VideoSessionVCViewController: UIViewController,
                 
                 captureSession?.addInput(input)
                 
+                //  Converted with Swiftify v1.0.6166 - https://objectivec2swift.com/
+                // we want BGRA, both CoreGraphics and OpenGL work well with 'BGRA'
+                var rgbOutputSettings = [ (kCVPixelBufferPixelFormatTypeKey as String) : Int(kCMPixelFormat_32BGRA) ]
+
                 videoDataOutput = AVCaptureVideoDataOutput()
-                let rgbOutputSettings = [kCVPixelBufferPixelFormatTypeKey as String: NSNumber(value: kCMPixelFormat_32BGRA)]
                 videoDataOutput.videoSettings = rgbOutputSettings
                 videoDataOutput.alwaysDiscardsLateVideoFrames = true
                 var videoDataOutputQueue = DispatchQueue(label:"VideoDataOutputQueue")
@@ -114,10 +117,16 @@ class VideoSessionVCViewController: UIViewController,
 //        let pixelBuffer : CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
 //        let attachments : CFDictionary = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, pixelBuffer, CMAttachmentMode( kCMAttachmentMode_ShouldPropagate))!
 //        let ciImage : CIImage = CIImage(cvPixelBuffer: pixelBuffer, options: attachments as? [String : AnyObject])
-        
-        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        let cameraImage = CIImage(cvPixelBuffer: pixelBuffer!)
-        videoFilter.processCIImage(cameraImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.previewLayer, previewView: self.previewView)
+        //  Converted with Swiftify v1.0.6166 - https://objectivec2swift.com/
+        // get the image
+        var pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        var attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate)
+        var ciImage = CIImage(cvPixelBuffer: pixelBuffer!, options: (attachments as? [String : AnyObject]))
+        if attachments != nil {
+            
+        }
+
+        videoFilter.processCIImage(ciImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.previewLayer, previewView: self.previewView)
     }
     
     func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) {
