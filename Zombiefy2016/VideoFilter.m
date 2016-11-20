@@ -1,4 +1,4 @@
-#import "ViewController.h"
+#import "VideoFilter.h"
 #import <CoreImage/CoreImage.h>
 #import <ImageIO/ImageIO.h>
 #import <AssertMacros.h>
@@ -29,7 +29,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
       orientation:(UIDeviceOrientation)orientation;
 @end
 
-@implementation ViewController
+@implementation VideoFilter
 #define CAPTURE_FRAMES_PER_SECOND		20
 
 @synthesize videoDataOutput = _videoDataOutput;
@@ -40,11 +40,6 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 @synthesize faceDetector = _faceDetector;
 
 @synthesize isUsingFrontFacingCamera = _isUsingFrontFacingCamera;
-
-- (void)setupAVCapture
-{
-
-}
 
 // find where the video box is positioned within the preview layer based on the video size and gravity
 + (CGRect)videoPreviewBoxForGravity:(NSString *)gravity 
@@ -119,7 +114,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	CGSize parentFrameSize = [self.previewView frame].size;
 	NSString *gravity = [self.previewLayer videoGravity];
 	BOOL isMirrored = [self.previewLayer isMirrored];
-	CGRect previewBox = [ViewController videoPreviewBoxForGravity:gravity 
+	CGRect previewBox = [VideoFilter videoPreviewBoxForGravity:gravity
                                                         frameSize:parentFrameSize 
                                                      apertureSize:clearAperture.size];
 	
@@ -246,9 +241,11 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
            previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
             previewView:(UIView *) previewView
+        videoDataOutput:(AVCaptureVideoDataOutput *) videoDataOutput
 {
     self.previewLayer = previewLayer;
     self.previewView = previewView;
+    self.videoDataOutput = videoDataOutput;
     
     // make sure your device orientation is not locked.
 	UIDeviceOrientation curDeviceOrientation = [[UIDevice currentDevice] orientation];
@@ -270,19 +267,19 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
             orientation:curDeviceOrientation];
 	});
     
-//    if (WeAreRecording) {
-//        
-//        lastSampleTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-//        if( assetWriter.status != AVAssetWriterStatusWriting  )
-//        {
-//            [assetWriter startWriting];
-//            [assetWriter startSessionAtSourceTime:lastSampleTime];
-//        }
-//        
-//        if( captureOutput == self.videoDataOutput )
-//            [self newVideoSample:sampleBuffer];
-//        
-//    }
+    if (WeAreRecording) {
+        
+        lastSampleTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+        if( assetWriter.status != AVAssetWriterStatusWriting  )
+        {
+            [assetWriter startWriting];
+            [assetWriter startSessionAtSourceTime:lastSampleTime];
+        }
+        
+        if( captureOutput == videoDataOutput )
+            [self newVideoSample:sampleBuffer];
+        
+    }
 }
 
 -(void) newVideoSample:(CMSampleBufferRef)sampleBuffer
@@ -398,6 +395,11 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     if (self) {
 
     }
+    
+    self.borderImage = [UIImage imageNamed:@"border"];
+    NSDictionary *detectorOptions = [[NSDictionary alloc] initWithObjectsAndKeys:CIDetectorAccuracyLow, CIDetectorAccuracy, nil];
+    self.faceDetector = [CIDetector detectorOfType:CIDetectorTypeFace context:nil options:detectorOptions];
+    
     return self;
 }
 //- (void)viewDidLoad

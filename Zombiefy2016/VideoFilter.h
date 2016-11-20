@@ -9,7 +9,7 @@
 - (void)switchCamera;
 @end
 
-@interface ViewController : UIViewController
+@interface VideoFilter : UIViewController
 <UIGestureRecognizerDelegate, AVCaptureFileOutputRecordingDelegate>{
     BOOL WeAreRecording;
     NSURL *outputURL;
@@ -22,7 +22,9 @@
 - (void)processCIImage:(CIImage *)ciImage
  didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
           previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
-           previewView:(UIView *) previewView;
+           previewView:(UIView *) previewView
+       videoDataOutput:(AVCaptureVideoDataOutput *) videoDataOutput;
+- (void)record;
 
 @property (nonatomic, strong) UIView *previewView;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
