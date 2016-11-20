@@ -10,10 +10,22 @@
 @end
 
 @interface ViewController : UIViewController
-    <UIGestureRecognizerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureFileOutputRecordingDelegate>
+<UIGestureRecognizerDelegate, AVCaptureFileOutputRecordingDelegate>{
+    BOOL WeAreRecording;
+    NSURL *outputURL;
+    CMTime lastSampleTime;
+    AVAssetWriter *assetWriter;
+    AVAssetWriterInput *assetWriterInput;
+    AVAssetWriterInputPixelBufferAdaptor *pixelBufferAdaptor;
+}
 
-@property (nonatomic, weak) IBOutlet UIView *previewView;
-@property (nonatomic, weak) IBOutlet CameraControls *cameraControls;
-@property (nonatomic) AVCaptureDevicePosition *desiredPosition;
+- (void)overrideCapture:(AVCaptureOutput *)captureOutput
+  didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
+         fromConnection:(AVCaptureConnection *)connection
+           previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
+            previewView:(UIView *) previewView;
+
+@property (nonatomic, strong) UIView *previewView;
+@property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
 
 @end

@@ -21,10 +21,11 @@ class VideoSessionVCViewController: UIViewController,
     @IBOutlet weak var previewView: UIView?
     @IBOutlet weak var cameraControls: CameraControls?
     
+    var videoFilter: ViewController!
     var captureSession : AVCaptureSession!
     var captureDevice:AVCaptureDevice!
     var deviceInput : AVCaptureDeviceInput!
-    var stillImageOutput : AVCaptureStillImageOutput!
+    var videoDataOutput : AVCaptureVideoDataOutput!
     var previewLayer : AVCaptureVideoPreviewLayer!
     
     override func viewDidLoad() {
@@ -34,6 +35,7 @@ class VideoSessionVCViewController: UIViewController,
 
     func setupCapture() {
         
+        videoFilter = ViewController.init()
         self.cameraControls?.delegate = self
         
         captureSession = AVCaptureSession()
@@ -59,14 +61,20 @@ class VideoSessionVCViewController: UIViewController,
                 
                 captureSession?.addInput(input)
                 
-                stillImageOutput = AVCaptureStillImageOutput()
-                stillImageOutput?.outputSettings = [AVVideoCodecKey : AVVideoCodecJPEG]
+                videoDataOutput = AVCaptureVideoDataOutput()
+                let rgbOutputSettings = [kCVPixelBufferPixelFormatTypeKey as String: NSNumber(value: kCMPixelFormat_32BGRA)]
+                videoDataOutput.videoSettings = rgbOutputSettings
+                videoDataOutput.alwaysDiscardsLateVideoFrames = true
+                var videoDataOutputQueue = DispatchQueue(label:"VideoDataOutputQueue")
+                videoDataOutput.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
                 
-                if (captureSession?.canAddOutput(stillImageOutput) != nil){
-                    captureSession?.addOutput(stillImageOutput)
+                if (captureSession?.canAddOutput(videoDataOutput) != nil){
+                    captureSession?.addOutput(videoDataOutput)
+                    videoDataOutput.connection(withMediaType: AVMediaTypeVideo).isEnabled = true
+
+//                    var movieFileOutput = AVCaptureMovieFileOutput();
+//                    captureSession.addOutput(movieFileOutput)
                     
-                    var movieFileOutput = AVCaptureMovieFileOutput();
-                    captureSession.addOutput(movieFileOutput)
                     previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
                     
                     previewLayer?.videoGravity = AVLayerVideoGravityResizeAspect
@@ -103,9 +111,12 @@ class VideoSessionVCViewController: UIViewController,
     
     
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
-        let pixelBuffer : CVPixelBufferRef = CMSampleBufferGetImageBuffer(sampleBuffer)!
-        let attachments : CFDictionaryRef = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, pixelBuffer, CMAttachmentMode( kCMAttachmentMode_ShouldPropagate))!
-        let ciImage : CIImage = CIImage(CVPixelBuffer: pixelBuffer, options: attachments as? [String : AnyObject])
+//        let pixelBuffer : CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+//        let attachments : CFDictionary = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, pixelBuffer, CMAttachmentMode( kCMAttachmentMode_ShouldPropagate))!
+//        let ciImage : CIImage = CIImage(cvPixelBuffer: pixelBuffer, options: attachments as? [String : AnyObject])
+//        self.videoFilter.previewView = previewView
+//        self.videoFilter.previewLayer = previewLayer
+        videoFilter.overrideCapture(captureOutput, didOutputSampleBuffer: sampleBuffer, from: connection, previewLayer: self.previewLayer, previewView: self.previewView)
     }
     
     func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) {

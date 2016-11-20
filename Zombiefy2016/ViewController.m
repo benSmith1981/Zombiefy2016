@@ -9,25 +9,14 @@
 
 static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
-@interface ViewController () <CameraControlsProtocol>
+@interface NSObject ()
 {
-    BOOL WeAreRecording;
-    NSURL *outputURL;
-    CMTime lastSampleTime;
-    AVAssetWriter *assetWriter;
-    AVAssetWriterInput *assetWriterInput;
-    AVAssetWriterInputPixelBufferAdaptor *pixelBufferAdaptor;
+
 }
-@property (nonatomic, strong) AVCaptureMovieFileOutput *movieFileOutput;
-
-@property (nonatomic, strong) AVCaptureSession *session;
-@property (nonatomic, strong) AVCaptureDevice *device;
-
 @property (nonatomic) BOOL isUsingFrontFacingCamera;
 @property (nonatomic, strong) AVCaptureVideoDataOutput *videoDataOutput;
 @property (nonatomic) dispatch_queue_t videoDataOutputQueue;
 @property (nonatomic) dispatch_queue_t movieDataOutputQueue;
-@property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
 
 @property (nonatomic, strong) UIImage *borderImage;
 @property (nonatomic, strong) CIDetector *faceDetector;
@@ -43,134 +32,19 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 @implementation ViewController
 #define CAPTURE_FRAMES_PER_SECOND		20
 
-@synthesize movieFileOutput = _movieFileOutput;
 @synthesize videoDataOutput = _videoDataOutput;
 @synthesize videoDataOutputQueue = _videoDataOutputQueue;
-@synthesize session = _session;
 @synthesize borderImage = _borderImage;
 @synthesize previewView = _previewView;
 @synthesize previewLayer = _previewLayer;
-@synthesize cameraControls = _cameraControls;
-@synthesize device = _device;
-@synthesize desiredPosition = _desiredPosition;
 @synthesize faceDetector = _faceDetector;
 
 @synthesize isUsingFrontFacingCamera = _isUsingFrontFacingCamera;
 
 - (void)setupAVCapture
 {
-	NSError *error = nil;
-    
-//    self.cameraControls.delegate = self;
-    
-	self.session = [[AVCaptureSession alloc] init];
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
-	    [self.session setSessionPreset:AVCaptureSessionPresetHigh];
-	} else {
-	    [self.session setSessionPreset:AVCaptureSessionPresetPhoto];
-	}
-    
-    // find the front facing camera
-	for (AVCaptureDevice *d in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo]) {
-		if ([d position] == AVCaptureDevicePositionFront) {
-			self.device = d;
-            self.isUsingFrontFacingCamera = YES;
-			break;
-		}
-	}
-    // fall back to the default camera.
-    if( nil == self.device )
-    {
-        self.isUsingFrontFacingCamera = NO;
-        self.device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    }
-    
-    // get the input device
-    AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&error];
-    
-	if( !error ) {
-        
-        // add the input to the session
-        if ( [self.session canAddInput:deviceInput] ){
-            [self.session addInput:deviceInput];
-        }
-        
-        // ADD VIDEO DATA OUTPUT FOR ANALYSIS OF IMAGE
-        self.videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
-        
-        // we want BGRA, both CoreGraphics and OpenGL work well with 'BGRA'
-//        NSDictionary *rgbOutputSettings = [NSDictionary dictionaryWithObject:
-//                                           [NSNumber numberWithInt:kCMPixelFormat_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
-//        [self.videoDataOutput setVideoSettings:rgbOutputSettings];
 
-        [self.videoDataOutput setVideoSettings:[NSDictionary dictionaryWithObjectsAndKeys:
-                                       [NSNumber numberWithFloat:320.0], (id)kCVPixelBufferWidthKey,
-                                       [NSNumber numberWithFloat:320.0], (id)kCVPixelBufferHeightKey,
-                                       [NSNumber numberWithInt:kCVPixelFormatType_32BGRA],(id)kCVPixelBufferPixelFormatTypeKey,
-                                       nil]];
-        
-        [self.videoDataOutput setAlwaysDiscardsLateVideoFrames:YES]; // discard if the data output queue is blocked
-        
-        // create a serial dispatch queue used for the sample buffer delegate
-        // a serial dispatch queue must be used to guarantee that video frames will be delivered in order
-        // see the header doc for setSampleBufferDelegate:queue: for more information
-        self.videoDataOutputQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
-        [self.videoDataOutput setSampleBufferDelegate:self queue:self.videoDataOutputQueue];
-        
-        if ( [self.session canAddOutput:self.videoDataOutput] ){
-            [self.session addOutput:self.videoDataOutput];
-        }
-        
-        // get the output for doing face detection.
-        [[self.videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES]; 
-
-        self.previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
-        self.previewLayer.backgroundColor = [[UIColor blackColor] CGColor];
-        self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-        
-        CALayer *rootLayer = [self.previewView layer];
-        [rootLayer setMasksToBounds:YES];
-        [self.previewLayer setFrame:[rootLayer bounds]];
-        [rootLayer addSublayer:self.previewLayer];
-        [self.session startRunning];
-        
-    }
-	self.session = nil;
-	if (error) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
-                            [NSString stringWithFormat:@"Failed with error %d", (int)[error code]]
-                                               message:[error localizedDescription]
-										      delegate:nil 
-								     cancelButtonTitle:@"Dismiss" 
-								     otherButtonTitles:nil];
-		[alertView show];
-		[self teardownAVCapture];
-	}
 }
-
-// clean up capture setup
-- (void)teardownAVCapture
-{
-	self.videoDataOutput = nil;
-	[self.previewLayer removeFromSuperlayer];
-	self.previewLayer = nil;
-}
-
-
-// utility routine to display error aleart if takePicture fails
-- (void)displayErrorOnMainQueue:(NSError *)error withMessage:(NSString *)message
-{
-	dispatch_async(dispatch_get_main_queue(), ^(void) {
-		UIAlertView *alertView = [[UIAlertView alloc] 
-                initWithTitle:[NSString stringWithFormat:@"%@ (%d)", message, (int)[error code]]
-                      message:[error localizedDescription]
-				     delegate:nil 
-		    cancelButtonTitle:@"Dismiss" 
-		    otherButtonTitles:nil];
-        [alertView show];
-	});
-}
-
 
 // find where the video box is positioned within the preview layer based on the video size and gravity
 + (CGRect)videoPreviewBoxForGravity:(NSString *)gravity 
@@ -222,8 +96,6 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 - (void)drawFaces:(NSArray *)features 
       forVideoBox:(CGRect)clearAperture 
       orientation:(UIDeviceOrientation)orientation
-     previewLayer:(CALayer*)previewLayerParam
-     previewView:(UIView*)previewViewParam
 
 {
 	NSArray *sublayers = [NSArray arrayWithArray:[self.previewLayer sublayers]];
@@ -369,10 +241,14 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     return [NSNumber numberWithInt:exifOrientation];
 }
 
-- (void)captureOutput:(AVCaptureOutput *)captureOutput 
+- (void)overrideCapture:(AVCaptureOutput *)captureOutput
     didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer 
        fromConnection:(AVCaptureConnection *)connection
-{	
+           previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
+            previewView:(UIView *) previewView
+{
+    self.previewLayer = previewLayer;
+    self.previewView = previewView;
 	// get the image
 	CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
 	CFDictionaryRef attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
@@ -402,19 +278,19 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
             orientation:curDeviceOrientation];
 	});
     
-    if (WeAreRecording) {
-        
-        lastSampleTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-        if( assetWriter.status != AVAssetWriterStatusWriting  )
-        {
-            [assetWriter startWriting];
-            [assetWriter startSessionAtSourceTime:lastSampleTime];
-        }
-        
-        if( captureOutput == self.videoDataOutput )
-            [self newVideoSample:sampleBuffer];
-        
-    }
+//    if (WeAreRecording) {
+//        
+//        lastSampleTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+//        if( assetWriter.status != AVAssetWriterStatusWriting  )
+//        {
+//            [assetWriter startWriting];
+//            [assetWriter startSessionAtSourceTime:lastSampleTime];
+//        }
+//        
+//        if( captureOutput == self.videoDataOutput )
+//            [self newVideoSample:sampleBuffer];
+//        
+//    }
 }
 
 -(void) newVideoSample:(CMSampleBufferRef)sampleBuffer
@@ -500,9 +376,6 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
         //----- STOP RECORDING -----
         NSLog(@"STOP RECORDING");
         WeAreRecording = NO;
-//        [assetWriterInput markAsFinished];
-//        [assetWriter endSessionAtSourceTime:lastSampleTime];
-//        [assetWriter finishWriting];
         //----- RECORDED SUCESSFULLY -----
         NSLog(@"didFinishRecordingToOutputFileAtURL - success");
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
@@ -524,73 +397,45 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     }
 }
 
-- (void)switchCamera{
-    if ([[AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo] count] > 1)		//Only do if device has multiple cameras
-    {
-        NSLog(@"Toggle camera");
-        NSError *error;
-        //AVCaptureDeviceInput *videoInput = [self videoInput];
-        AVCaptureDeviceInput *NewVideoInput;
-        AVCaptureDevicePosition position = [self.device position];
-        if (position == AVCaptureDevicePositionBack)
-        {
-            NewVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self CameraWithPosition:AVCaptureDevicePositionFront] error:&error];
-        }
-        else if (position == AVCaptureDevicePositionFront)
-        {
-            NewVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self CameraWithPosition:AVCaptureDevicePositionBack] error:&error];
-        }
-        
-        if (NewVideoInput != nil)
-        {
-            [self.session beginConfiguration];		//We can now change the inputs and output configuration.  Use commitConfiguration to end
-            [self.session removeInput:self.device];
-            if ([self.session canAddInput:NewVideoInput])
-            {
-                [self.session addInput:NewVideoInput];
-                self.device = NewVideoInput;
-            }
-            else
-            {
-                [self.session addInput:self.device];
-            }
-            
-            [self.session commitConfiguration];
-        }
+
+#pragma mark - initialise
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+
     }
+    return self;
 }
-
-
-#pragma mark - View lifecycle
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    
-	[self setupAVCapture];
-	self.borderImage = [UIImage imageNamed:@"border"];
-	NSDictionary *detectorOptions = [[NSDictionary alloc] initWithObjectsAndKeys:CIDetectorAccuracyLow, CIDetectorAccuracy, nil];
-	self.faceDetector = [CIDetector detectorOfType:CIDetectorTypeFace context:nil options:detectorOptions];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-    [self teardownAVCapture];
-	self.faceDetector = nil;
-	self.borderImage = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // We support only Portrait.
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
+//- (void)viewDidLoad
+//{
+//    [super viewDidLoad];
+//	// Do any additional setup after loading the view, typically from a nib.
+//    
+//    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+//    
+//	[self setupAVCapture];
+//	self.borderImage = [UIImage imageNamed:@"border"];
+//	NSDictionary *detectorOptions = [[NSDictionary alloc] initWithObjectsAndKeys:CIDetectorAccuracyLow, CIDetectorAccuracy, nil];
+//	self.faceDetector = [CIDetector detectorOfType:CIDetectorTypeFace context:nil options:detectorOptions];
+//}
+//
+//- (void)viewDidUnload
+//{
+//    [super viewDidUnload];
+//    // Release any retained subviews of the main view.
+//    // e.g. self.myOutlet = nil;
+//    [self teardownAVCapture];
+//	self.faceDetector = nil;
+//	self.borderImage = nil;
+//}
+//
+//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+//{
+//    // We support only Portrait.
+//	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+//}
 
 
 @end
