@@ -197,14 +197,13 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
                 
             }
             
-            videoFilter.processCIImage(ciImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.videoLayer, previewView: self.previewView, videoDataOutput: self.videoOutput, { (imageRef) in
-                print(imageRef)
+            videoFilter.processCIImage(ciImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.videoLayer, previewView: self.previewView, videoDataOutput: self.videoOutput, { (image) in
                 if self.isRecording == true{
                     
                     DispatchQueue(label: "sample buffer append").sync(execute: {
                         if self.isRecording == true{
                             if self.writerInput.isReadyForMoreMediaData {
-                                let bo = self.adapter.append(self.videoFilter.pixelBuffer(fromCGImageRef: imageRef, size: (self.previewView?.frame.size)!) as! CVPixelBuffer, withPresentationTime: self.starTime)
+                                let bo = self.adapter.append(self.videoFilter.pixelBuffer(fromCGImageRef: self.convertCIImageToCGImage(inputImage: (image?.ciImage)!), size: (self.previewView?.frame.size)!) as! CVPixelBuffer, withPresentationTime: self.starTime)
                                 print("video is \(bo)")
                             }
                         }

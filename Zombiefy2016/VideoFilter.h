@@ -24,7 +24,7 @@
           previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
            previewView:(UIView *) previewView
        videoDataOutput:(AVCaptureVideoDataOutput *) videoDataOutput
-                      :(void(^)(CGImageRef imageRef)) completion;
+                      :(void(^)(UIImage* image)) completion;
 - (void)record;
 - (CVPixelBufferRef)pixelBufferFromCGImageRef:(CGImageRef)image size:(CGSize)size;
 - (NSDictionary *)getAdapterDictionary;
