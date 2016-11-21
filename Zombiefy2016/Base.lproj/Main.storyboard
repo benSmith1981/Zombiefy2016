@@ -51,6 +51,10 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="54" id="UPj-Vk-rBK"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="cameraButton" destination="ekM-Ya-aO1" id="Sx7-OS-IdV"/>
+                                    <outlet property="recordButton" destination="wG3-UC-Wd1" id="McE-u8-bQc"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -196,20 +196,6 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    
-//    if (WeAreRecording) {
-//        
-//        lastSampleTime = CMSampleBufferGetPresentationTimeStamp(bufferedImage);
-//        if( assetWriter.status != AVAssetWriterStatusWriting  )
-//        {
-//            [assetWriter startWriting];
-//            [assetWriter startSessionAtSourceTime:lastSampleTime];
-//        }
-//        
-//        //        if( captureOutput == videoDataOutput )
-//        [self newVideoSample:sampleBuffer];
-//        
-//    }
 	[CATransaction commit];
     
     return (image);
@@ -269,7 +255,6 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		PHOTOS_EXIF_0ROW_RIGHT_0COL_BOTTOM      = 7, //   7  =  0th row is on the right, and 0th column is the bottom.  
 		PHOTOS_EXIF_0ROW_LEFT_0COL_BOTTOM       = 8  //   8  =  0th row is on the left, and 0th column is the bottom.  
 	};
-    _isUsingFrontFacingCamera = true;
     
 	switch (orientation) {
 		case UIDeviceOrientationPortraitUpsideDown:  // Device oriented vertically, home button on the top
@@ -327,110 +312,6 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
         completion(imagetemp);
 	});
 
-}
-
--(void) newVideoSample:(CMSampleBufferRef)sampleBuffer
-{
-    if( WeAreRecording )
-    {
-        if( assetWriter.status > AVAssetWriterStatusWriting )
-        {
-            NSLog(@"Warning: writer status is %d", assetWriter.status);
-            if( assetWriter.status == AVAssetWriterStatusFailed )
-                NSLog(@"Error: %@", assetWriter.error);
-            return;
-        }
-        
-        if( ![assetWriterInput appendSampleBuffer:sampleBuffer] )
-            NSLog(@"Unable to write to video input");
-        
-    }
-    
-}
-
-//********** GET CAMERA IN SPECIFIED POSITION IF IT EXISTS **********
-- (AVCaptureDevice *) CameraWithPosition:(AVCaptureDevicePosition) Position
-{
-    NSArray *Devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-    for (AVCaptureDevice *Device in Devices)
-    {
-        if ([Device position] == Position)
-        {
-            return Device;
-        }
-    }
-    return nil;
-}
-
-#pragma mark - CameraControls Delegate
-
-- (void)record{
-
-    
-    if (!WeAreRecording)
-    {
-        //----- START RECORDING -----
-        NSLog(@"START RECORDING");
-        WeAreRecording = YES;
-
-        //Create temporary URL to record to
-        NSString *outputPath = [[NSString alloc] initWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.mov"];
-        outputURL = [[NSURL alloc] initFileURLWithPath:outputPath];
-        
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        if ([fileManager fileExistsAtPath:outputPath])
-        {
-            NSError *error;
-            if ([fileManager removeItemAtPath:outputPath error:&error] == NO)
-            {
-                //Error - handle if requried
-            }
-        }
-        
-        NSDictionary *videoCompressionProps = [NSDictionary dictionaryWithObjectsAndKeys:
-                                               [NSNumber numberWithInteger:2500000], AVVideoAverageBitRateKey,
-                                               nil];
-        
-        NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
-                                       AVVideoCodecH264, AVVideoCodecKey,
-                                       [NSNumber numberWithInt:self.previewView.frame.size.width], AVVideoWidthKey,
-                                       [NSNumber numberWithInt:self.previewView.frame.size.height], AVVideoHeightKey,
-                                       videoCompressionProps, AVVideoCompressionPropertiesKey,
-                                       nil];
-        
-        assetWriter = [[AVAssetWriter alloc]
-                       initWithURL:outputURL
-                       fileType:AVFileTypeMPEG4
-                       error:nil];
-        assetWriterInput = [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
-        assetWriterInput.expectsMediaDataInRealTime = YES;
-        [assetWriter addInput:assetWriterInput];
-
-    }
-    else
-    {
-        //----- STOP RECORDING -----
-        NSLog(@"STOP RECORDING");
-        WeAreRecording = NO;
-        //----- RECORDED SUCESSFULLY -----
-        NSLog(@"didFinishRecordingToOutputFileAtURL - success");
-        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-//        if ([library videoAtPathIsCompatibleWithSavedPhotosAlbum:outputURL])
-        {
-            [library writeVideoAtPathToSavedPhotosAlbum:outputURL
-                                        completionBlock:^(NSURL *assetURL, NSError *error)
-             {
-                 if (error)
-                 {
-                     
-                 }
-             }];
-        }
-        
-        if(![assetWriter finishWriting]) {
-            NSLog(@"finishWriting returned NO") ;
-        }
-    }
 }
 
 - (CVPixelBufferRef )pixelBufferFromCGImageRef:(CGImageRef)image size:(CGSize)size
@@ -510,34 +391,5 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     
     return self;
 }
-//- (void)viewDidLoad
-//{
-//    [super viewDidLoad];
-//	// Do any additional setup after loading the view, typically from a nib.
-//    
-//    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-//    
-//	[self setupAVCapture];
-//	self.borderImage = [UIImage imageNamed:@"border"];
-//	NSDictionary *detectorOptions = [[NSDictionary alloc] initWithObjectsAndKeys:CIDetectorAccuracyLow, CIDetectorAccuracy, nil];
-//	self.faceDetector = [CIDetector detectorOfType:CIDetectorTypeFace context:nil options:detectorOptions];
-//}
-//
-//- (void)viewDidUnload
-//{
-//    [super viewDidUnload];
-//    // Release any retained subviews of the main view.
-//    // e.g. self.myOutlet = nil;
-//    [self teardownAVCapture];
-//	self.faceDetector = nil;
-//	self.borderImage = nil;
-//}
-//
-//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-//{
-//    // We support only Portrait.
-//	return (interfaceOrientation == UIInterfaceOrientationPortrait);
-//}
-
 
 @end

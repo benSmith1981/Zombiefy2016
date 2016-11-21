@@ -12,6 +12,9 @@ import UIKit
 
     public var delegate: CameraControlsProtocolSwift?
 
+    @IBOutlet var recordButton : UIButton?
+    @IBOutlet var cameraButton : UIButton?
+
     @IBAction func record(_ sender: AnyObject) {
         delegate?.record()
     }

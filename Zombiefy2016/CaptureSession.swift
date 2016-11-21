@@ -37,6 +37,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
         devicePosition = AVCaptureDevicePosition.front
         videoFilter = VideoFilter.init()
         self.cameraControls?.delegate = self
+        self.cameraControls?.recordButton?.setTitle("record", for: .normal)
         video()
     }
     
@@ -134,24 +135,25 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
     func record() {
         
         if isRecording {
-//            myButton.setTitle("record", forState: .Normal)
+            self.cameraControls?.recordButton?.setTitle("record", for: .normal)
             isRecording = false
             self.writerInput.markAsFinished()
             audioWriterInput.markAsFinished()
             self.videoWriter.finishWriting { () -> Void in
                 print("FINISHED!!!!!")
-                UISaveVideoAtPathToSavedPhotosAlbum(self.lastPath, self, "video:didFinishSavingWithError:contextInfo:", nil)
+                UISaveVideoAtPathToSavedPhotosAlbum(self.lastPath, self, #selector(self.video(videoPath:didFinishSavingWithError:contextInfo:)), nil)
+
             }
             
             
-        }else{
+        } else{
             
             let fileUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(getCurrentDate())-capturedvideo.MP4")
             
             lastPath = fileUrl!.path
             videoWriter = try? AVAssetWriter(outputURL: fileUrl!, fileType: AVFileTypeMPEG4)
             
-            let outputSettings = [AVVideoCodecKey : AVVideoCodecH264, AVVideoWidthKey : NSNumber(value: Float((previewView?.frame.size.width)!)), AVVideoHeightKey : NSNumber(value: Float((previewView?.frame.size.height)!))] as [String : Any]
+            let outputSettings = [AVVideoCodecKey : AVVideoCodecH264, AVVideoWidthKey : NSNumber(value: Float(previewView!.layer.bounds.size.width)), AVVideoHeightKey : NSNumber(value: Float(previewView!.layer.bounds.size.height))] as [String : Any]
             
             writerInput = AVAssetWriterInput(mediaType: AVMediaTypeVideo, outputSettings: outputSettings)
             writerInput.expectsMediaDataInRealTime = true
@@ -167,7 +169,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
             videoWriter.startSession(atSourceTime: starTime)
             
             isRecording = true
-//            myButton.setTitle("stop", forState: .Normal)
+            self.cameraControls?.recordButton?.setTitle("stop", for: .normal)
             
         }
         
@@ -188,35 +190,44 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
         starTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         
         if captureOutput == videoOutput {
-//            connection.videoOrientation = AVCaptureVideoOrientation.portrait
-            
+            connection.videoOrientation = AVCaptureVideoOrientation.portrait
+        
             let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             let attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate)
-            let ciImage = CIImage(cvPixelBuffer: pixelBuffer!, options: (attachments as? [String : AnyObject]))
+            let ciImageOriginal = CIImage(cvPixelBuffer: pixelBuffer!, options: (attachments as? [String : AnyObject]))
             if attachments != nil {
                 
             }
+     
+            let comicEffect = CIFilter(name: "CIHexagonalPixellate")
+
+            comicEffect!.setValue(ciImageOriginal, forKey: kCIInputImageKey)
             
-            videoFilter.processCIImage(ciImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.videoLayer, previewView: self.previewView, videoDataOutput: self.videoOutput, { (image) in
+            
+            videoFilter.processCIImage(ciImageOriginal, didOutputSampleBuffer: sampleBuffer, previewLayer: self.videoLayer, previewView: self.previewView, videoDataOutput: self.videoOutput, { (image) in
                 if self.isRecording == true{
                     
                     DispatchQueue(label: "sample buffer append").sync(execute: {
                         if self.isRecording == true{
                             if self.writerInput.isReadyForMoreMediaData {
-                                let bo = self.adapter.append(self.videoFilter.pixelBuffer(fromCGImageRef: self.convertCIImageToCGImage(inputImage: (image?.ciImage)!), size: (self.previewView?.frame.size)!) as! CVPixelBuffer, withPresentationTime: self.starTime)
-                                print("video is \(bo)")
+                                if let ciImage = CIImage(image: image!) {
+//                                    let cgiImage = self.convertCIImageToCGImage(inputImage: ciImage)
+//                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (self.previewView?.layer.bounds.size)!).takeRetainedValue() as CVPixelBuffer
+//                                    let bo = self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
+                                    
+                                    let cgiImage = self.convertCIImageToCGImage(inputImage: ciImageOriginal)
+                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (self.previewView?.layer.bounds.size)!).takeRetainedValue() as CVPixelBuffer
+//                                    let b2 = self.writerInput.append(sampleBuffer)
+                                    let b2 = self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
+                                    print("video is \(b2)")
+                                }
+
                             }
                         }
                     })
                 }
             })
 
-
-//            dispatch_get_main_queue().asynchronously()
-//            {
-////                self.myImage.image = filteredImage
-//                
-//            }
         }else if captureOutput == audioOutput{
             
             if self.isRecording == true{
