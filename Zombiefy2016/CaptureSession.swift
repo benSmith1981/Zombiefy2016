@@ -173,19 +173,27 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
                 DispatchQueue(label: "sample buffer append").sync(execute: {
                     if self.isRecording == true{
                         if self.writerInput.isReadyForMoreMediaData {
-                            let b = self.adapter.append(videoFilter.pixelBuffer(from: self.convertCIImageToCGImage(comicEffect!.valueForKey(kCIOutputImageKey) as! CIImage!)).takeRetainedValue() as CVPixelBuffer, size: 1), withPresentationTime: self.starTime);
-//                            let bo = self.adapter.appendPixelBuffer(videoFilter.pixelBufferFromCGImage(self.convertCIImageToCGImage(comicEffect!.valueForKey(kCIOutputImageKey) as! CIImage!)).takeRetainedValue() as CVPixelBuffer, withPresentationTime: self.starTime)
-//                            
-                            print("video is \(bo)")
+                            
+
+                            let CIimage = comicEffect!.valueForKey(kCIOutputImageKey) as! CIImage!)).takeRetainedValue() as CVPixelBufferRef
+                            
+                            self.adapter.append(videoFilter.pixelBuffer(fromCGImageRef: CIimage, size: self.previewView?.frame.size), withPresentationTime: self.starTime)
+//                            videoFilter.pixelBuffer(fromCGImageRef: CIimage as! CVPixelBuffer, size: (self.previewView?.frame.size)!)
+//                            self.adapter.appendPixelBuffer(videoFilter.pixelBuffer(from: videoFilter.pixelBuffer(fromCGImageRef: CIimage as! CVPixelBuffer, size: (self.previewView?.frame.size)!)), withPresentationTime: self.starTime)
+                            
+//                            let bo = self.adapter.appendPixelBuffer(self.videoFilter.pixelBufferFromCGImage(self.convertCIImageToCGImage(comicEffect!.valueForKey(kCIOutputImageKey) as! CIImage!)).takeRetainedValue() as CVPixelBufferRef, withPresentationTime: self.starTime)
+//ForKey(kCIOutputImageKey) as! CIImage!)).takeRetainedValue() as CVPixelBuffer, withPresentationTime: self.starTime)
+//
+//                            print("video is \(bo)")
                         }
                     }
                 })
             }
-            dispatch_async(dispatch_get_main_queue())
-            {
-//                self.myImage.image = filteredImage
-                
-            }
+//            dispatch_get_main_queue().asynchronously()
+//            {
+////                self.myImage.image = filteredImage
+//                
+//            }
         }else if captureOutput == audioOutput{
             
             if self.isRecording == true{
