@@ -23,7 +23,8 @@
  didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
           previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
            previewView:(UIView *) previewView
-       videoDataOutput:(AVCaptureVideoDataOutput *) videoDataOutput;
+       videoDataOutput:(AVCaptureVideoDataOutput *) videoDataOutput
+                      :(void(^)(CGImageRef imageRef)) completion;
 - (void)record;
 - (CVPixelBufferRef)pixelBufferFromCGImageRef:(CGImageRef)image size:(CGSize)size;
 - (NSDictionary *)getAdapterDictionary;

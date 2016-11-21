@@ -15,10 +15,11 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
 
     var videoFilter: VideoFilter!
 
-    let captureSession = AVCaptureSession()
-    let videoOutput = AVCaptureVideoDataOutput()
-    let audioOutput = AVCaptureAudioDataOutput()
-    
+    var captureSession = AVCaptureSession()
+    var videoOutput = AVCaptureVideoDataOutput()
+    var audioOutput = AVCaptureAudioDataOutput()
+    var videoLayer = AVCaptureVideoPreviewLayer()
+
     var adapter:AVAssetWriterInputPixelBufferAdaptor!
     var isRecording = false
     var videoWriter:AVAssetWriter!
@@ -27,11 +28,13 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
     var lastPath = ""
     var starTime = kCMTimeZero
     var devicePosition : AVCaptureDevicePosition!
+    var captureDevice:AVCaptureDevice!
 
 //    var outputSize = CGSizeMake(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        devicePosition = AVCaptureDevicePosition.front
         videoFilter = VideoFilter.init()
         self.cameraControls?.delegate = self
         video()
@@ -46,22 +49,32 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
             print("error in audio")
         }
         
-        captureSession.beginConfiguration()
+        captureSession = AVCaptureSession()
+
+//        captureSession.beginConfiguration()
+//        captureSession.sessionPreset = AVCaptureSessionPresetMedium
         
-        captureSession.sessionPreset = AVCaptureSessionPresetMedium
+        //create AVCaptureVideoPreviewLayer
+        self.videoLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         
-        let videoLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        videoLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
-        //videoLayer.frame = myImage.bounds
-        //myImage.layer.addSublayer(videoLayer)
+        if self.captureDevice == nil{
+            captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        }
         
-        view.layer.addSublayer(videoLayer!)
+        let videoDevices = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
         
-        let backCamera = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        for device in videoDevices!{
+            let device = device as! AVCaptureDevice
+            if device.position == devicePosition {
+                captureDevice = device
+                break
+            }
+        }
+        
         let audio = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
         do
         {
-            let input = try AVCaptureDeviceInput(device: backCamera)
+            let input = try AVCaptureDeviceInput(device: captureDevice)
             let audioInput = try AVCaptureDeviceInput(device: audio)
             
             captureSession.addInput(input)
@@ -73,15 +86,34 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
             print("can't access camera")
             return
         }
-        
         let queue = DispatchQueue(label: "sample buffer delegate")
-        
+
+        //set rgb settins for video
+        let rgbOutputSettings = [ (kCVPixelBufferPixelFormatTypeKey as String) : Int(kCMPixelFormat_32BGRA) ]
+        videoOutput = AVCaptureVideoDataOutput()
+        videoOutput.videoSettings = rgbOutputSettings
+        videoOutput.alwaysDiscardsLateVideoFrames = true
+
+        //add video output to session
         videoOutput.setSampleBufferDelegate(self, queue: queue)
-        audioOutput.setSampleBufferDelegate(self, queue: queue)
-        
         captureSession.addOutput(videoOutput)
+        videoOutput.connection(withMediaType: AVMediaTypeVideo).isEnabled = true
+
+        //add audio to session
+        audioOutput = AVCaptureAudioDataOutput()
+        audioOutput.setSampleBufferDelegate(self, queue: queue)
         captureSession.addOutput(audioOutput)
         captureSession.commitConfiguration()
+        
+        //set video gravity on layer
+        self.videoLayer.videoGravity = AVLayerVideoGravityResizeAspect
+        self.videoLayer.connection.videoOrientation = AVCaptureVideoOrientation.portrait
+        
+        //add our videolayer or AVCaptureVideoPreviewLayer to our rootlayer
+        let rootLayer : CALayer = previewView!.layer
+        rootLayer.masksToBounds = true
+        self.videoLayer.frame = rootLayer.bounds
+        rootLayer.addSublayer(self.videoLayer)
         
         captureSession.startRunning()
         
@@ -152,43 +184,35 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
     
     
     
-    
-    func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         starTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         
         if captureOutput == videoOutput {
-            connection.videoOrientation = AVCaptureVideoOrientation.portrait
+//            connection.videoOrientation = AVCaptureVideoOrientation.portrait
             
             let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-            let cameraImage = CIImage(cvPixelBuffer: pixelBuffer!)
-            
-            let comicEffect = CIFilter(name: "CIHexagonalPixellate")
-            
-            comicEffect!.setValue(cameraImage, forKey: kCIInputImageKey)
-            
-            let filteredImage = UIImage(ciImage: comicEffect!.value(forKey: kCIOutputImageKey) as! CIImage!)
-            //let filteredImage = UIImage(CIImage: cameraImage)
-            if self.isRecording == true{
+            let attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate)
+            let ciImage = CIImage(cvPixelBuffer: pixelBuffer!, options: (attachments as? [String : AnyObject]))
+            if attachments != nil {
                 
-                DispatchQueue(label: "sample buffer append").sync(execute: {
-                    if self.isRecording == true{
-                        if self.writerInput.isReadyForMoreMediaData {
-                            
-
-                            let CIimage = comicEffect!.valueForKey(kCIOutputImageKey) as! CIImage!)).takeRetainedValue() as CVPixelBufferRef
-                            
-                            self.adapter.append(videoFilter.pixelBuffer(fromCGImageRef: CIimage, size: self.previewView?.frame.size), withPresentationTime: self.starTime)
-//                            videoFilter.pixelBuffer(fromCGImageRef: CIimage as! CVPixelBuffer, size: (self.previewView?.frame.size)!)
-//                            self.adapter.appendPixelBuffer(videoFilter.pixelBuffer(from: videoFilter.pixelBuffer(fromCGImageRef: CIimage as! CVPixelBuffer, size: (self.previewView?.frame.size)!)), withPresentationTime: self.starTime)
-                            
-//                            let bo = self.adapter.appendPixelBuffer(self.videoFilter.pixelBufferFromCGImage(self.convertCIImageToCGImage(comicEffect!.valueForKey(kCIOutputImageKey) as! CIImage!)).takeRetainedValue() as CVPixelBufferRef, withPresentationTime: self.starTime)
-//ForKey(kCIOutputImageKey) as! CIImage!)).takeRetainedValue() as CVPixelBuffer, withPresentationTime: self.starTime)
-//
-//                            print("video is \(bo)")
-                        }
-                    }
-                })
             }
+            
+            videoFilter.processCIImage(ciImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.videoLayer, previewView: self.previewView, videoDataOutput: self.videoOutput, { (imageRef) in
+                print(imageRef)
+                if self.isRecording == true{
+                    
+                    DispatchQueue(label: "sample buffer append").sync(execute: {
+                        if self.isRecording == true{
+                            if self.writerInput.isReadyForMoreMediaData {
+                                let bo = self.adapter.append(self.videoFilter.pixelBuffer(fromCGImageRef: imageRef, size: (self.previewView?.frame.size)!) as! CVPixelBuffer, withPresentationTime: self.starTime)
+                                print("video is \(bo)")
+                            }
+                        }
+                    })
+                }
+            })
+
+
 //            dispatch_get_main_queue().asynchronously()
 //            {
 ////                self.myImage.image = filteredImage

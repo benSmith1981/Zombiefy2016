@@ -68,6 +68,7 @@ class VideoSessionVCViewController: UIViewController,
                 videoDataOutput = AVCaptureVideoDataOutput()
                 videoDataOutput.videoSettings = rgbOutputSettings
                 videoDataOutput.alwaysDiscardsLateVideoFrames = true
+                
                 var videoDataOutputQueue = DispatchQueue(label:"VideoDataOutputQueue")
                 videoDataOutput.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
 
@@ -124,7 +125,10 @@ class VideoSessionVCViewController: UIViewController,
             
         }
 
-        videoFilter.processCIImage(ciImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.previewLayer, previewView: self.previewView, videoDataOutput: self.videoDataOutput)
+        videoFilter.processCIImage(ciImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.previewLayer, previewView: self.previewView, videoDataOutput: self.videoDataOutput, { (imageRef) in
+
+        })
+//        videoFilter.processCIImage(ciImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.previewLayer, previewView: self.previewView, videoDataOutput: self.videoDataOutput)
     }
 
 }

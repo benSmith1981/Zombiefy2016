@@ -6,10 +6,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Video SessionVC View Controller-->
+        <!--Capture Session-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="VideoSessionVCViewController" customModule="Zombiefy2016" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="CaptureSession" customModule="Zombiefy2016" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -61,8 +61,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="cameraControls" destination="x0m-dn-ki9" id="Ed8-f8-Vlq"/>
-                        <outlet property="previewView" destination="8mn-rE-co5" id="uMV-UO-z6J"/>
+                        <outlet property="cameraControls" destination="x0m-dn-ki9" id="EgC-aA-iUX"/>
+                        <outlet property="previewView" destination="8mn-rE-co5" id="upA-Mc-wy8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

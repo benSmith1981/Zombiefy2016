@@ -20,11 +20,12 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 @property (nonatomic, strong) UIImage *borderImage;
 @property (nonatomic, strong) CIDetector *faceDetector;
+@property (nonatomic) CGImageRef imageRef;
 
 
 - (void)setupAVCapture;
 - (void)teardownAVCapture;
-- (void)drawFaces:(NSArray *)features 
+- (CGImageRef)drawFaces:(NSArray *)features
       forVideoBox:(CGRect)videoBox 
       orientation:(UIDeviceOrientation)orientation;
 @end
@@ -88,7 +89,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 // called asynchronously as the capture output is capturing sample buffers, this method asks the face detector
 // to detect features and for each draw the green border in a layer and set appropriate orientation
-- (void)drawFaces:(NSArray *)features 
+- (CGImageRef )drawFaces:(NSArray *)features
       forVideoBox:(CGRect)clearAperture 
       orientation:(UIDeviceOrientation)orientation
 
@@ -106,9 +107,14 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 			[layer setHidden:YES];
 	}	
 	
+    UIGraphicsBeginImageContext(self.previewLayer.bounds.size);
+    [self.previewLayer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
 	if ( featuresCount == 0 ) {
 		[CATransaction commit];
-		return; // early bail.
+		return (__bridge CGImageRef)(image); // early bail.
 	}
     
 	CGSize parentFrameSize = [self.previewView frame].size;
@@ -185,10 +191,10 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		}
 		currentFeature++;
 	}
+    
     UIGraphicsBeginImageContext(self.previewLayer.bounds.size);
     [self.previewLayer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    CVPixelBufferRef bufferedImage = [self CVPixelBufferRefFromUiImage:image];
+    image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
     
@@ -206,6 +212,8 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 //        
 //    }
 	[CATransaction commit];
+    
+    return (__bridge CGImageRef)(image);
 
 
 }
@@ -293,6 +301,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
            previewLayer:(AVCaptureVideoPreviewLayer *) previewLayer
             previewView:(UIView *) previewView
         videoDataOutput:(AVCaptureVideoDataOutput *) videoDataOutput
+                            :(void(^)(CGImageRef imageRef)) completion
 {
     self.previewLayer = previewLayer;
     self.previewView = previewView;
@@ -313,9 +322,10 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	CGRect cleanAperture = CMVideoFormatDescriptionGetCleanAperture(fdesc, false /*originIsTopLeft == false*/);
 	
 	dispatch_async(dispatch_get_main_queue(), ^(void) {
-		[self drawFaces:features 
+		 [self drawFaces:features
             forVideoBox:cleanAperture 
             orientation:curDeviceOrientation];
+        completion(nil);
 	});
 
 
