@@ -218,7 +218,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Zombiefy2016/CaptureSession.swift"
-            timestampString = "501456810.24527"
+            timestampString = "501463774.852063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "193"
@@ -234,7 +234,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Zombiefy2016/VideoFilter.m"
-            timestampString = "501443689.369885"
+            timestampString = "501495926.228953"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "201"
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Zombiefy2016/VideoFilter.m"
-            timestampString = "501443689.369885"
+            timestampString = "501495926.228953"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
             landmarkName = "-CVPixelBufferRefFromUiImage:"
             landmarkType = "7">
          </BreakpointContent>
@@ -266,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Zombiefy2016/CaptureSession.swift"
-            timestampString = "501460088.236029"
+            timestampString = "501496194.240835"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "217"
-            endingLineNumber = "217"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
             landmarkName = "captureOutput(_:didOutputSampleBuffer:from:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -282,28 +282,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Zombiefy2016/CaptureSession.swift"
-            timestampString = "501457818.842599"
+            timestampString = "501496194.240835"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
             landmarkName = "captureOutput(_:didOutputSampleBuffer:from:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Zombiefy2016/VideoFilter.m"
-            timestampString = "501460070.073299"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "300"
-            endingLineNumber = "300"
-            landmarkName = "-processCIImage:didOutputSampleBuffer:previewLayer:previewView:videoDataOutput::"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

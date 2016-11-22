@@ -89,16 +89,16 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
         }
         let queue = DispatchQueue(label: "sample buffer delegate")
 
+        //video output
         //set rgb settins for video
         let rgbOutputSettings = [ (kCVPixelBufferPixelFormatTypeKey as String) : Int(kCMPixelFormat_32BGRA) ]
         videoOutput = AVCaptureVideoDataOutput()
         videoOutput.videoSettings = rgbOutputSettings
         videoOutput.alwaysDiscardsLateVideoFrames = true
-
-        //add video output to session
         videoOutput.setSampleBufferDelegate(self, queue: queue)
         captureSession.addOutput(videoOutput)
         videoOutput.connection(withMediaType: AVMediaTypeVideo).isEnabled = true
+//        videoOutput.connection(withMediaType: AVMediaTypeVideo).videoOrientation = AVCaptureVideoOrientation.portrait
 
         //add audio to session
         audioOutput = AVCaptureAudioDataOutput()
@@ -106,10 +106,10 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
         captureSession.addOutput(audioOutput)
         captureSession.commitConfiguration()
         
-        //set video gravity on layer
-        self.videoLayer.videoGravity = AVLayerVideoGravityResizeAspect
-        self.videoLayer.connection.videoOrientation = AVCaptureVideoOrientation.portrait
-        
+        //set video layer
+        videoLayer.videoGravity = AVLayerVideoGravityResizeAspect
+        videoLayer.connection.videoOrientation = AVCaptureVideoOrientation.portrait
+
         //add our videolayer or AVCaptureVideoPreviewLayer to our rootlayer
         let rootLayer : CALayer = previewView!.layer
         rootLayer.masksToBounds = true
@@ -190,36 +190,33 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
         starTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         
         if captureOutput == videoOutput {
-            connection.videoOrientation = AVCaptureVideoOrientation.portrait
+//            connection.videoOrientation = AVCaptureVideoOrientation.portrait
         
             let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-            let attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate)
-            let ciImageOriginal = CIImage(cvPixelBuffer: pixelBuffer!, options: (attachments as? [String : AnyObject]))
-            if attachments != nil {
-                
-            }
-     
+            let cameraImage = CIImage(cvPixelBuffer: pixelBuffer!)
+            
+            //filter
             let comicEffect = CIFilter(name: "CIHexagonalPixellate")
-
-            comicEffect!.setValue(ciImageOriginal, forKey: kCIInputImageKey)
+            comicEffect!.setValue(cameraImage, forKey: kCIInputImageKey)
             
-            
-            videoFilter.processCIImage(ciImageOriginal, didOutputSampleBuffer: sampleBuffer, previewLayer: self.videoLayer, previewView: self.previewView, videoDataOutput: self.videoOutput, { (image) in
+            videoFilter.processCIImage(cameraImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.videoLayer, previewView: self.previewView, videoDataOutput: self.videoOutput, { (image) in
                 if self.isRecording == true{
                     
                     DispatchQueue(label: "sample buffer append").sync(execute: {
                         if self.isRecording == true{
                             if self.writerInput.isReadyForMoreMediaData {
                                 if let ciImage = CIImage(image: image!) {
-//                                    let cgiImage = self.convertCIImageToCGImage(inputImage: ciImage)
-//                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (self.previewView?.layer.bounds.size)!).takeRetainedValue() as CVPixelBuffer
-//                                    let bo = self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
+                                    let cgiImage = self.convertCIImageToCGImage(inputImage: ciImage)
+                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (self.previewView?.frame.size)!).takeRetainedValue() as CVPixelBuffer
+                                    self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
                                     
-                                    let cgiImage = self.convertCIImageToCGImage(inputImage: ciImageOriginal)
-                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (self.previewView?.layer.bounds.size)!).takeRetainedValue() as CVPixelBuffer
+                               
+//                                    let cgiImage = self.convertCIImageToCGImage(inputImage: cameraImage)
+//                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (CGSize.init(width: 1024, height: 968))).takeRetainedValue() as CVPixelBuffer
+//                                    self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
+
 //                                    let b2 = self.writerInput.append(sampleBuffer)
-                                    let b2 = self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
-                                    print("video is \(b2)")
+
                                 }
 
                             }

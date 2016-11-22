@@ -190,18 +190,19 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		}
 		currentFeature++;
 	}
+
+	[CATransaction commit];
     
     UIGraphicsBeginImageContext(self.previewLayer.bounds.size);
     [self.previewLayer renderInContext:UIGraphicsGetCurrentContext()];
-    image = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *imageEdited = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-	[CATransaction commit];
-    
-    return (image);
+    return (imageEdited);
 
 
 }
+
 
 - (CVPixelBufferRef)CVPixelBufferRefFromUiImage:(UIImage *)img {
     
@@ -386,7 +387,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     }
     
     self.borderImage = [UIImage imageNamed:@"border"];
-    NSDictionary *detectorOptions = [[NSDictionary alloc] initWithObjectsAndKeys:CIDetectorAccuracyLow, CIDetectorAccuracy, nil];
+    NSDictionary *detectorOptions = [[NSDictionary alloc] initWithObjectsAndKeys:CIDetectorAccuracyHigh, CIDetectorAccuracy, nil];
     self.faceDetector = [CIDetector detectorOfType:CIDetectorTypeFace context:nil options:detectorOptions];
     
     return self;
