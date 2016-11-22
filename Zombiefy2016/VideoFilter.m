@@ -106,7 +106,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 			[layer setHidden:YES];
 	}	
 	
-    UIGraphicsBeginImageContext(self.previewLayer.bounds.size);
+    UIGraphicsBeginImageContext(CGSizeMake(640, 480));
     [self.previewLayer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -128,8 +128,8 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		// the feature box originates in the bottom left of the video frame.
 		// (Bottom right if mirroring is turned on)
 		CGRect faceRect = [ff bounds];
-        
-		// flip preview width and height
+
+        // flip preview width and height
 		CGFloat temp = faceRect.size.width;
 		faceRect.size.width = faceRect.size.height;
 		faceRect.size.height = temp;
@@ -193,7 +193,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 	[CATransaction commit];
     
-    UIGraphicsBeginImageContext(self.previewLayer.bounds.size);
+    UIGraphicsBeginImageContext(CGSizeMake(640, 480));
     [self.previewLayer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *imageEdited = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

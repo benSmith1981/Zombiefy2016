@@ -52,8 +52,8 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
         
         captureSession = AVCaptureSession()
 
-//        captureSession.beginConfiguration()
-//        captureSession.sessionPreset = AVCaptureSessionPresetMedium
+        captureSession.beginConfiguration()
+        captureSession.sessionPreset = AVCaptureSessionPreset640x480
         
         //create AVCaptureVideoPreviewLayer
         self.videoLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -207,7 +207,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
                             if self.writerInput.isReadyForMoreMediaData {
                                 if let ciImage = CIImage(image: image!) {
                                     let cgiImage = self.convertCIImageToCGImage(inputImage: ciImage)
-                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (self.previewView?.frame.size)!).takeRetainedValue() as CVPixelBuffer
+                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (CGSize.init(width: 640, height: 480))).takeRetainedValue() as CVPixelBuffer
                                     self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
                                     
                                
