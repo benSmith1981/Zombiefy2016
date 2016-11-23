@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol CameraControlsProtocolSwift {
+    func record()
+    func switchCamera()
+}
+
 class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
 
     @IBOutlet weak var cameraControls: CameraControls?
@@ -225,6 +230,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
         starTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
 
         if captureOutput == videoOutput {
+            //WHY WHEN I USE THIS Line does the moustache disappear? But i need this line else the recorded video is the wrong orientation, how do i fix both?
 //            connection.videoOrientation = AVCaptureVideoOrientation.portrait
 
             let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
@@ -234,6 +240,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
             let comicEffect = CIFilter(name: "CIHexagonalPixellate")
             comicEffect!.setValue(cameraImage, forKey: kCIInputImageKey)
             
+            //WHY IS A BLACK IMAGE RETURNED AFTER PROCESSING THE FRAME?
             videoFilter.processCIImage(cameraImage, didOutputSampleBuffer: sampleBuffer, previewLayer: self.videoLayer, previewView: self.previewView, videoDataOutput: self.videoOutput, { (image) in
                 if self.isRecording == true{
                     
@@ -252,7 +259,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
                 }
             })
 
-        } else if captureOutput == audioOutput{
+        } else if captureOutput == audioOutput{ //WHY IS THE AUDIO OUTPUT NOT CAPTURED?
             if self.isRecording == true{
                 let bo = audioWriterInput.append(sampleBuffer)
                 print("audio is \(bo)")

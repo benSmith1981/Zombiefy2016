@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Zombiefy2016/CaptureSession.swift"
-            timestampString = "501604113.794912"
+            timestampString = "501606856.838198"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "258"
-            endingLineNumber = "258"
+            startingLineNumber = "265"
+            endingLineNumber = "265"
             landmarkName = "captureOutput(_:didOutputSampleBuffer:from:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -25,13 +25,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Zombiefy2016/CaptureSession.swift"
-            timestampString = "501604113.175331"
+            filePath = "Zombiefy2016/VideoFilter.m"
+            timestampString = "501612919.681571"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
-            landmarkName = "setupSession()"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
+            landmarkName = "-drawFaces:forVideoBox:orientation:withVideoImage:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -41,13 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Zombiefy2016/CaptureSession.swift"
-            timestampString = "501604114.543287"
+            filePath = "Zombiefy2016/VideoFilter.m"
+            timestampString = "501613112.655197"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
-            landmarkName = "setupSession()"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
+            landmarkName = "-drawFaces:forVideoBox:orientation:withVideoImage:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,13 +57,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Zombiefy2016/CaptureSession.swift"
-            timestampString = "501604453.886342"
+            filePath = "Zombiefy2016/VideoFilter.m"
+            timestampString = "501613117.970552"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
-            landmarkName = "captureOutput(_:didOutputSampleBuffer:from:)"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
+            landmarkName = "-drawFaces:forVideoBox:orientation:withVideoImage:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

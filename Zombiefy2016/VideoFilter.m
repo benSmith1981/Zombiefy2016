@@ -26,7 +26,8 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 - (void)teardownAVCapture;
 - (UIImage *)drawFaces:(NSArray *)features
       forVideoBox:(CGRect)videoBox 
-      orientation:(UIDeviceOrientation)orientation;
+      orientation:(UIDeviceOrientation)orientation
+        withVideoImage:(CIImage *)ciImage;
 @end
 
 @implementation VideoFilter
@@ -91,8 +92,16 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 - (UIImage *)drawFaces:(NSArray *)features
       forVideoBox:(CGRect)clearAperture 
       orientation:(UIDeviceOrientation)orientation
-
+        withVideoImage:(CIImage *)faceImage
 {
+//    
+//    UIGraphicsBeginImageContext(CGSizeMake(480, 640));
+//    [self.previewLayer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    
+//    return (image);
+//    
 	NSArray *sublayers = [NSArray arrayWithArray:[self.previewLayer sublayers]];
 	NSInteger sublayersCount = [sublayers count], currentSublayer = 0;
 	NSInteger featuresCount = [features count], currentFeature = 0;
@@ -102,24 +111,26 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	
 	// hide all the face layers
 	for ( CALayer *layer in sublayers ) {
-		if ( [[layer name] isEqualToString:@"FaceLayer"] )
+		if ( [[layer name] isEqualToString:@"featureLayer"] )
 			[layer setHidden:YES];
-	}	
-	
-    UIGraphicsBeginImageContext(CGSizeMake(480, 640));
-    [self.previewLayer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-	if ( featuresCount == 0 ) {
-		[CATransaction commit];
-		return (image); // early bail.
+        
+//        if ( [[layer name] isEqualToString:@"FaceLayer"] )
+//            [layer setHidden:YES];
 	}
     
 	CGSize parentFrameSize = [self.previewView frame].size;
 	NSString *gravity = [self.previewLayer videoGravity];
-	BOOL isMirrored = [self.previewLayer isMirrored];
-	CGRect previewBox = [VideoFilter videoPreviewBoxForGravity:gravity
+    BOOL isMirrored ;
+    if ([self.previewLayer respondsToSelector:@selector(connection)])
+    {
+        isMirrored = self.previewLayer.connection.isVideoMirrored;
+    }
+    else
+    {
+        isMirrored = self.previewLayer.isMirrored;
+    }
+    
+    CGRect previewBox = [VideoFilter videoPreviewBoxForGravity:gravity
                                                         frameSize:parentFrameSize 
                                                      apertureSize:clearAperture.size];
 	
@@ -150,38 +161,62 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 			faceRect = CGRectOffset(faceRect, previewBox.origin.x, previewBox.origin.y);
 		
 		CALayer *featureLayer = nil;
-		
+        CALayer *faceLayer = nil;
+
 		// re-use an existing layer if possible
-		while ( !featureLayer && (currentSublayer < sublayersCount) ) {
+		while ( (!featureLayer || !faceLayer) && (currentSublayer < sublayersCount) ) {
 			CALayer *currentLayer = [sublayers objectAtIndex:currentSublayer++];
-			if ( [[currentLayer name] isEqualToString:@"FaceLayer"] ) {
+			if ( [[currentLayer name] isEqualToString:@"featureLayer"] ) {
 				featureLayer = currentLayer;
 				[currentLayer setHidden:NO];
 			}
+            
+            if ( [[currentLayer name] isEqualToString:@"FaceLayer"] ) {
+                faceLayer = currentLayer;
+                [currentLayer setHidden:NO];
+            }
 		}
-		
+        
+        if ( !faceLayer ) {
+            faceLayer = [[CALayer alloc]init];
+            faceLayer.contents = faceImage.CGImage;
+            [faceLayer setName:@"FaceLayer"];
+            [self.previewLayer addSublayer:faceLayer];
+            faceLayer = nil;
+        }
+        [faceLayer setFrame:CGRectMake(0, 0, 480, 640)];
+
 		// create a new one if necessary
 		if ( !featureLayer ) {
 			featureLayer = [[CALayer alloc]init];
 			featureLayer.contents = (id)self.borderImage.CGImage;
-			[featureLayer setName:@"FaceLayer"];
+			[featureLayer setName:@"featureLayer"];
 			[self.previewLayer addSublayer:featureLayer];
 			featureLayer = nil;
 		}
+
 		[featureLayer setFrame:faceRect];
 		
 		switch (orientation) {
 			case UIDeviceOrientationPortrait:
 				[featureLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(0.))];
+                [faceLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(0.))];
+
 				break;
 			case UIDeviceOrientationPortraitUpsideDown:
 				[featureLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(180.))];
+                [faceLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(180.))];
+
 				break;
 			case UIDeviceOrientationLandscapeLeft:
 				[featureLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(90.))];
+                [faceLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(90.))];
+
 				break;
 			case UIDeviceOrientationLandscapeRight:
 				[featureLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(-90.))];
+                [faceLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(-90.))];
+
 				break;
 			case UIDeviceOrientationFaceUp:
 			case UIDeviceOrientationFaceDown:
@@ -309,7 +344,8 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	dispatch_async(dispatch_get_main_queue(), ^(void) {
         UIImage *imagetemp = [self drawFaces:features
             forVideoBox:cleanAperture 
-            orientation:curDeviceOrientation];
+            orientation:curDeviceOrientation
+            withVideoImage:ciImage];
         completion(imagetemp);
 	});
 
@@ -386,7 +422,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
     }
     
-    self.borderImage = [UIImage imageNamed:@"border"];
+    self.borderImage = [UIImage imageNamed:@"mouth1"];
     NSDictionary *detectorOptions = [[NSDictionary alloc] initWithObjectsAndKeys:CIDetectorAccuracyLow, CIDetectorAccuracy, nil];
     self.faceDetector = [CIDetector detectorOfType:CIDetectorTypeFace context:nil options:detectorOptions];
     

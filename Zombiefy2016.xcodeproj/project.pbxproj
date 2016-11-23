@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		5A8965359F0075EEAB73418C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B537B7BF8586BD79CB10B5CF /* Pods.framework */; };
 		909B4BB31DDCEED90093BE41 /* CameraControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909B4BB21DDCEED90093BE41 /* CameraControls.swift */; };
-		BE23F3F51DE1CF6200194EA6 /* VideoSessionVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE23F3F41DE1CF6200194EA6 /* VideoSessionVCViewController.swift */; };
 		BE23F3F91DE2EEA000194EA6 /* CaptureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE23F3F81DE2EEA000194EA6 /* CaptureSession.swift */; };
 		BE8EEDB81DD7A64300AA1811 /* VideoFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8EEDB71DD7A64300AA1811 /* VideoFilter.m */; };
 		BE8EEDBA1DD7A7B200AA1811 /* border.png in Resources */ = {isa = PBXBuildFile; fileRef = BE8EEDB91DD7A7B200AA1811 /* border.png */; };
@@ -43,7 +42,6 @@
 		909B4BB21DDCEED90093BE41 /* CameraControls.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControls.swift; sourceTree = "<group>"; };
 		B537B7BF8586BD79CB10B5CF /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA9706D8685952C58900E0A8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		BE23F3F41DE1CF6200194EA6 /* VideoSessionVCViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoSessionVCViewController.swift; sourceTree = "<group>"; };
 		BE23F3F81DE2EEA000194EA6 /* CaptureSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureSession.swift; sourceTree = "<group>"; };
 		BE8EEDB51DD7A64200AA1811 /* Zombiefy2016-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zombiefy2016-Bridging-Header.h"; sourceTree = "<group>"; };
 		BE8EEDB61DD7A64300AA1811 /* VideoFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFilter.h; sourceTree = "<group>"; };
@@ -125,7 +123,6 @@
 				BEB84F261DD79364001FF535 /* AppDelegate.swift */,
 				BEB84F2A1DD79364001FF535 /* Main.storyboard */,
 				909B4BB21DDCEED90093BE41 /* CameraControls.swift */,
-				BE23F3F41DE1CF6200194EA6 /* VideoSessionVCViewController.swift */,
 				BEB84F2D1DD79364001FF535 /* Assets.xcassets */,
 				BE8EEDB91DD7A7B200AA1811 /* border.png */,
 				BEB84F2F1DD79364001FF535 /* LaunchScreen.storyboard */,
@@ -353,7 +350,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE23F3F51DE1CF6200194EA6 /* VideoSessionVCViewController.swift in Sources */,
 				BE8EEDB81DD7A64300AA1811 /* VideoFilter.m in Sources */,
 				909B4BB31DDCEED90093BE41 /* CameraControls.swift in Sources */,
 				BE23F3F91DE2EEA000194EA6 /* CaptureSession.swift in Sources */,
