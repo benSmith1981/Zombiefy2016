@@ -106,7 +106,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 			[layer setHidden:YES];
 	}	
 	
-    UIGraphicsBeginImageContext(CGSizeMake(720, 1280));
+    UIGraphicsBeginImageContext(CGSizeMake(480, 640));
     [self.previewLayer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -193,7 +193,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 	[CATransaction commit];
     
-    UIGraphicsBeginImageContext(CGSizeMake(720, 1280));
+    UIGraphicsBeginImageContext(CGSizeMake(480, 640));
     [self.previewLayer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *imageEdited = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

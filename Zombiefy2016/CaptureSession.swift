@@ -32,7 +32,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
     
     //DEVICE
     var devicePosition : AVCaptureDevicePosition!
-    var captureDevice:AVCaptureDevice!
+    var captureDevice : AVCaptureDevice!
 
     //QUEUE
     var sessionQueue : DispatchQueue?
@@ -50,15 +50,15 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
     
     func setupSession() {
         
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryRecord)
-            try AVAudioSession.sharedInstance().setActive(true)
-        }catch {
-            print("error in audio")
-        }
+//        do {
+//            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryRecord)
+//            try AVAudioSession.sharedInstance().setActive(true)
+//        }catch {
+//            print("error in audio")
+//        }
         
         self.captureSession = AVCaptureSession()
-        self.captureSession.sessionPreset = AVCaptureSessionPreset1280x720
+        self.captureSession.sessionPreset = AVCaptureSessionPreset640x480
         self.sessionQueue = DispatchQueue(label: "sample buffer delegate")
         self.captureSession.beginConfiguration()
         self.addVideoInput()
@@ -66,13 +66,11 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
         self.addAudioOutput()
         self.addAudioInput()
         captureSession.commitConfiguration()
-        
-        //create AVCaptureVideoPreviewLayer
-
 
         //Create videolayer or AVCaptureVideoPreviewLayer add to our rootlayer
         let rootLayer : CALayer = previewView!.layer
         rootLayer.masksToBounds = true
+        //create AVCaptureVideoPreviewLayer
         self.videoLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         self.videoLayer.videoGravity = AVLayerVideoGravityResizeAspect
         self.videoLayer.frame = rootLayer.bounds
@@ -88,7 +86,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
         
         for device in devices!{
             let device = device as! AVCaptureDevice
-            if device.position == devicePosition {
+            if device.position == position {
                 captureDevice = device
                 break
             }
@@ -105,7 +103,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
         self.videoOutput.videoSettings = rgbOutputSettings
         self.videoOutput.alwaysDiscardsLateVideoFrames = true
         self.videoOutput.setSampleBufferDelegate(self, queue: self.sessionQueue)
-        //        videoOutput.connection(withMediaType: AVMediaTypeVideo).isEnabled = true
+        self.videoOutput.connection(withMediaType: AVMediaTypeVideo).isEnabled = true
         
         if self.captureSession.canAddOutput(self.videoOutput) {
             self.captureSession.addOutput(self.videoOutput)
@@ -116,9 +114,9 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
     func addVideoInput() -> Bool {
         var success: Bool = false
 
-        let videoDevice: AVCaptureDevice = deviceWithMediaType(mediaType: AVMediaTypeVideo as NSString, position: devicePosition)
+        self.captureDevice = deviceWithMediaType(mediaType: AVMediaTypeVideo as NSString, position: devicePosition)
         do {
-            self.videoDeviceInput = try AVCaptureDeviceInput.init(device: videoDevice)
+            self.videoDeviceInput = try AVCaptureDeviceInput.init(device: self.captureDevice)
             if self.captureSession.canAddInput(self.videoDeviceInput) {
                 self.captureSession.addInput(self.videoDeviceInput)
                 success = true
@@ -147,9 +145,11 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
     
     func addAudioOutput(){
         //add audio to session
-        audioOutput = AVCaptureAudioDataOutput()
-        audioOutput.setSampleBufferDelegate(self, queue: self.sessionQueue)
-        captureSession.addOutput(audioOutput)
+        self.audioOutput = AVCaptureAudioDataOutput()
+        self.audioOutput.setSampleBufferDelegate(self, queue: self.sessionQueue)
+        if self.captureSession.canAddOutput(self.audioOutput) {
+            captureSession.addOutput(audioOutput)
+        }
     }
     
     //DELGEGATE CAMERA CONTROLS
@@ -184,6 +184,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
             let fileUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(getCurrentDate())-capturedvideo.MP4")
             
             lastPath = fileUrl!.path
+            
             videoWriter = try? AVAssetWriter(outputURL: fileUrl!, fileType: AVFileTypeMPEG4)
             
             let outputSettings = [AVVideoCodecKey : AVVideoCodecH264, AVVideoWidthKey : NSNumber(value: Float(previewView!.layer.bounds.size.width)), AVVideoHeightKey : NSNumber(value: Float(previewView!.layer.bounds.size.height))] as [String : Any]
@@ -240,7 +241,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
                             if self.writerInput.isReadyForMoreMediaData {
                                 if let ciImage = CIImage(image: image!) {
                                     let cgiImage = self.convertCIImageToCGImage(inputImage: ciImage)
-                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (CGSize.init(width: 720, height: 1280))).takeRetainedValue() as CVPixelBuffer
+                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (CGSize.init(width: 480, height: 640))).takeRetainedValue() as CVPixelBuffer
                                     let bo = self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
                                     print("Video \(bo)")
 
@@ -252,14 +253,15 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift, AVCaptureVi
                 }
             })
 
-        }else if captureOutput == audioOutput{
-            
-            if self.isRecording == true{
-                
-                let bo = audioWriterInput.append(sampleBuffer)
-                print("audio is \(bo)")
-            }
         }
+//        else if captureOutput == audioOutput{
+//            
+//            if self.isRecording == true{
+//                
+//                let bo = audioWriterInput.append(sampleBuffer)
+//                print("audio is \(bo)")
+//            }
+//        }
         
         
         
