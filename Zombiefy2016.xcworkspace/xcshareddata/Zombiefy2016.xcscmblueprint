@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "459E8DA591932F0D7061F9F51489AC90416167B2",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "459E8DA591932F0D7061F9F51489AC90416167B2" : 9223372036854775807,
+    "C38B380F31BD99137C4AD1ED430B99306C077565" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "43A56E8C-287F-47A9-AC4C-67B04A659DA6",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "459E8DA591932F0D7061F9F51489AC90416167B2" : "Zombiefy2016\/",
+    "C38B380F31BD99137C4AD1ED430B99306C077565" : "iOSSwiftOpenGLCamera\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Zombiefy2016",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Zombiefy2016.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/benSmith1981\/Zombiefy2016.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "459E8DA591932F0D7061F9F51489AC90416167B2"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/bradley\/iOSSwiftOpenGLCamera.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C38B380F31BD99137C4AD1ED430B99306C077565"
+    }
+  ]
+}

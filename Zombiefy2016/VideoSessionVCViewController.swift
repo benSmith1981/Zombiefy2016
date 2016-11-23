@@ -27,7 +27,8 @@ class VideoSessionVCViewController: UIViewController,
     var videoDataOutput : AVCaptureVideoDataOutput!
     var previewLayer : AVCaptureVideoPreviewLayer!
     var devicePosition : AVCaptureDevicePosition!
-    
+    var sessionQueue : DispatchQueue?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         devicePosition = AVCaptureDevicePosition.front
@@ -40,6 +41,13 @@ class VideoSessionVCViewController: UIViewController,
         self.cameraControls?.delegate = self
         
         captureSession = AVCaptureSession()
+        self.captureSession = AVCaptureSession()
+        self.sessionQueue = DispatchQueue(label:"sessionQueue")
+        
+        self.captureSession.beginConfiguration()
+//        self.addVideoOutput()
+//        self.addStillImageOutput()
+        self.captureSession.commitConfiguration()
         
         let videoDevices = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
         
@@ -69,8 +77,7 @@ class VideoSessionVCViewController: UIViewController,
                 videoDataOutput.videoSettings = rgbOutputSettings
                 videoDataOutput.alwaysDiscardsLateVideoFrames = true
                 
-                var videoDataOutputQueue = DispatchQueue(label:"VideoDataOutputQueue")
-                videoDataOutput.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
+//                videoDataOutput.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
 
                 if (captureSession?.canAddOutput(videoDataOutput) != nil){
                     captureSession?.addOutput(videoDataOutput)
