@@ -53,7 +53,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
         captureSession = AVCaptureSession()
 
         captureSession.beginConfiguration()
-        captureSession.sessionPreset = AVCaptureSessionPreset640x480
+        captureSession.sessionPreset = AVCaptureSessionPreset1280x720
         
         //create AVCaptureVideoPreviewLayer
         self.videoLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -108,7 +108,7 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
         
         //set video layer
         videoLayer.videoGravity = AVLayerVideoGravityResizeAspect
-        videoLayer.connection.videoOrientation = AVCaptureVideoOrientation.portrait
+//        videoLayer.connection.videoOrientation = AVCaptureVideoOrientation.portrait
 
         //add our videolayer or AVCaptureVideoPreviewLayer to our rootlayer
         let rootLayer : CALayer = previewView!.layer
@@ -207,9 +207,9 @@ class CaptureSession: UIViewController, CameraControlsProtocolSwift,AVCaptureVid
                             if self.writerInput.isReadyForMoreMediaData {
                                 if let ciImage = CIImage(image: image!) {
                                     let cgiImage = self.convertCIImageToCGImage(inputImage: ciImage)
-                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (CGSize.init(width: 640, height: 480))).takeRetainedValue() as CVPixelBuffer
-                                    self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
-                                    
+                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (CGSize.init(width: 720, height: 1280))).takeRetainedValue() as CVPixelBuffer
+                                    let bo = self.adapter.append(pixelBuffer, withPresentationTime: self.starTime)
+                                    print("Video \(bo)")
                                
 //                                    let cgiImage = self.convertCIImageToCGImage(inputImage: cameraImage)
 //                                    let pixelBuffer = self.videoFilter.pixelBuffer(fromCGImageRef: cgiImage, size: (CGSize.init(width: 1024, height: 968))).takeRetainedValue() as CVPixelBuffer
