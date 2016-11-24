@@ -529,7 +529,7 @@
 				DEVELOPMENT_TEAM = CWK29L7ZPT;
 				INFOPLIST_FILE = Zombiefy2016/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bensmithinc.-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.BenSmithInc.Zombify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Zombiefy2016/Zombiefy2016-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -547,7 +547,7 @@
 				DEVELOPMENT_TEAM = CWK29L7ZPT;
 				INFOPLIST_FILE = Zombiefy2016/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bensmithinc.-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.BenSmithInc.Zombify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Zombiefy2016/Zombiefy2016-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

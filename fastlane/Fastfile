@@ -10,11 +10,11 @@ generated_fastfile_id "2b1f38dc-4f72-45d8-b365-6b904b769cb8"
 
 default_platform :ios
 
-# Fastfile actions accept additional configuration, but
-# don't worry, fastlane will prompt you for required
-# info which you can add here later
-lane :beta do
-  cocoapods
+platform :ios do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+    # increment_build_number
+  end
 
   desc "Submit to HockeyApp"
   # Download status: "1" = No user can download; "2" = Available for download
@@ -28,15 +28,14 @@ lane :beta do
         status: "2",
         notes: "New build"
       )
-    end
+  end
   
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
     # match(type: "appstore") # more information: https://codesigning.guide
-    use_legacy_build_api: true
-
-    gym(scheme: "Zombiefy2016") # Build your app - more options available
+    gym(scheme: "Zombiefy2016",
+    	use_legacy_build_api: true) # Build your app - more options available
     pilot
 
     # sh "your_script.sh"
