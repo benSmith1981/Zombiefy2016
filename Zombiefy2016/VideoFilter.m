@@ -179,7 +179,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
         
         if ( !faceLayer ) {
             faceLayer = [[CALayer alloc]init];
-            faceLayer.contents = faceImage.CGImage;
+//            faceLayer.contents = faceImage.CGImage;
             [faceLayer setName:@"FaceLayer"];
             [self.previewLayer addSublayer:faceLayer];
             faceLayer = nil;
