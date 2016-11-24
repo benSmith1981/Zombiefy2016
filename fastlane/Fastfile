@@ -16,14 +16,40 @@ default_platform :ios
 lane :beta do
   cocoapods
 
-  # build your iOS app
-  gym(
-    # scheme: "YourScheme"
+  desc "Submit to HockeyApp"
+  # Download status: "1" = No user can download; "2" = Available for download
+  lane :hockeyApp do
+      hockey(
+        ipa:"../build/Zombiefy2016.ipa",
+        dsym: "../build/Zombiefy2016.zip",
+        api_token: "31047ed37b2e4303acf93989f3e07386",
+        notify: "0",
+        release_type: "0",
+        status: "2",
+        notes: "New build"
+      )
+    end
+  
+  desc "Submit a new Beta Build to Apple TestFlight"
+  desc "This will also make sure the profile is up to date"
+  lane :beta do
+    # match(type: "appstore") # more information: https://codesigning.guide
     use_legacy_build_api: true
-  )
 
-  # upload to HockeyApp
-  hockey(
-    api_token: "31047ed37b2e4303acf93989f3e07386"
-  )
+    gym(scheme: "Zombiefy2016") # Build your app - more options available
+    pilot
+
+    # sh "your_script.sh"
+    # You can also use other beta testing services here (run `fastlane actions`)
+  end
+
+  desc "Deploy a new version to the App Store"
+  lane :release do
+    # match(type: "appstore")
+    # snapshot
+    gym(scheme: "Zombiefy2016") # Build your app - more options available
+    deliver(force: true)
+    # frameit
+  end
+
 end

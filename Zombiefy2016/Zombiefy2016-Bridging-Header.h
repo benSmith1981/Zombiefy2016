@@ -3,3 +3,4 @@
 //
 
 #import "VideoFilter.h"
+#import <HockeySDK/HockeySDK.h>

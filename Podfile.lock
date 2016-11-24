@@ -1,10 +1,12 @@
 PODS:
-  - CameraEngine (0.4)
+  - HockeySDK (3.8.5):
+    - HockeySDK/AllFeaturesLib (= 3.8.5)
+  - HockeySDK/AllFeaturesLib (3.8.5)
 
 DEPENDENCIES:
-  - CameraEngine
+  - HockeySDK
 
 SPEC CHECKSUMS:
-  CameraEngine: 8766440238e949fcfb6a062b15ac3326ef150e05
+  HockeySDK: dd11a2b9da3372fd025643bee5bc10c8c613d169
 
 COCOAPODS: 0.39.0

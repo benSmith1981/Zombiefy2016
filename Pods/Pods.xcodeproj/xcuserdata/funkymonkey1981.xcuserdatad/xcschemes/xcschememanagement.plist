@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>CameraEngine.xcscheme</key>
+		<key>HockeySDK-HockeySDKResources.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -17,12 +17,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>56139BC0C049CC18676CBEB20DD67BA2</key>
+		<key>3C014F737BF0E4D82F49D1E8DBB98C79</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B64FB8A62627EE2881D64AD36DC935F5</key>
+		<key>D110346BB7189CFD8A6E58ABF9B8C520</key>
 		<dict>
 			<key>primary</key>
 			<true/>
