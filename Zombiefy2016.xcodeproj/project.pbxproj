@@ -236,7 +236,7 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = CWK29L7ZPT;
 						LastSwiftMigration = 0800;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					BEB84F361DD79365001FF535 = {
 						CreatedOnToolsVersion = 8.0;
@@ -443,6 +443,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -495,6 +496,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -525,12 +527,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = CWK29L7ZPT;
 				INFOPLIST_FILE = Zombiefy2016/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.BenSmithInc.Zombify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "2586df6d-008b-4d18-a92d-8bd6c8847cdc";
+				PROVISIONING_PROFILE_SPECIFIER = "Zombify Test";
 				SWIFT_OBJC_BRIDGING_HEADER = "Zombiefy2016/Zombiefy2016-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -543,12 +549,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ben Smith (CWK29L7ZPT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ben Smith (CWK29L7ZPT)";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = CWK29L7ZPT;
 				INFOPLIST_FILE = Zombiefy2016/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.BenSmithInc.Zombify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9d5bfbc5-a840-4eac-a588-f9974094d815";
+				PROVISIONING_PROFILE_SPECIFIER = "Zombify Distribution";
 				SWIFT_OBJC_BRIDGING_HEADER = "Zombiefy2016/Zombiefy2016-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
